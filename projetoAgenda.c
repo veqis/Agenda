@@ -2,12 +2,13 @@
 #include <stdlib.h>
 
 #define TAM_NOME 200
-#define TAM_VET 1
+#define TAM_VET 20
 
 typedef struct {
     char nome [ TAM_NOME ];
     int cep;
     int telefone;
+    int id;
 } registro;
 
 void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa );
@@ -31,7 +32,7 @@ int main()
 
         switch (menu)
         {
-        case 0: return 0;
+        case 0: break;
 
         case 1: addPessoa ( pessoa[ TAM_VET ].nome, &qtdPessoa); break;
         
@@ -42,9 +43,8 @@ int main()
 
         aguardarParaSeguir ();
     } 
-    while (menu =! 0);
+    while (menu != 0);
     
-    return 0;
 }
 
 void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
@@ -56,20 +56,35 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         getchar();
         printf ( "Digite o nome: " );
         fflush ( stdin );
-        //fgets(pessoa[*qtdPessoa].nome, 199, stdin);
         scanf  ( "%[^\n]s", &pessoa[*qtdPessoa].nome );
 
-        *qtdPessoa++;
-    } while (continua =! 'n');
+        pessoa[*qtdPessoa].id = *qtdPessoa;
+        printf("[%i] ", pessoa[*qtdPessoa].id);
+        (*qtdPessoa)++;
+        
+        printf("Deseja inserir mais uma pessoa? (S/N)\n");
+        do
+        {
+            fflush ( stdin );
+            continua = tolower ( getchar () );
+
+            if ( ( continua != 's' ) && ( continua != 'n' ) )
+            {
+                printf ( "Entrada invalida digite apenas 'S' ou 'N': " );
+            }
+        } while (continua != 'n' && continua != 's');
+        
+    } while (continua != 'n');
     
+    return *qtdPessoa;
 }
 
 
 void imprime ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 {
-    printf("[%i] ", *qtdPessoa);
-    for (int i = 0; i <= *qtdPessoa; i++)
+    for (int i = 0; i < *qtdPessoa; i++)
     {
+        printf("[%i] ", pessoa[i].id);
         printf("%s\n", pessoa[i].nome);
     }
     
