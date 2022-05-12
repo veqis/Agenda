@@ -60,22 +60,16 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
         pessoa[*qtdPessoa].id = *qtdPessoa;
         (*qtdPessoa)++;
-        
-        printf("Deseja inserir mais uma pessoa? (S/N)\n");
+
+        printf("Deseja inserir mais uma pessoa? (S/N)\n");        
         do
         {
             fflush ( stdin );
             continua = tolower ( getchar () );
-
-            if ( ( continua != 's' ) && ( continua != 'n' ) )
-            {
-                printf ( "Entrada invalida digite apenas 'S' ou 'N': " );
-            }
         } while (continua != 'n' && continua != 's');
         
     } while (continua != 'n');
     
-    return *qtdPessoa;
 }
 
 
@@ -86,7 +80,7 @@ void imprime ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         printf("[%i] ", pessoa[i].id);
         printf("%s\n", pessoa[i].nome);
     }
-    
+    sleep(5);
 }
 
 void limparTela ( void )
