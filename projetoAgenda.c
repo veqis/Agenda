@@ -59,7 +59,6 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         scanf  ( "%[^\n]s", &pessoa[*qtdPessoa].nome );
 
         pessoa[*qtdPessoa].id = *qtdPessoa;
-        printf("[%i] ", pessoa[*qtdPessoa].id);
         (*qtdPessoa)++;
         
         printf("Deseja inserir mais uma pessoa? (S/N)\n");
