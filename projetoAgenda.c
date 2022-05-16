@@ -46,7 +46,6 @@ int main()
         default: printf ( "Opcao invalida!\n" ); break;
         }
 
-        aguardarParaSeguir ();
     } 
     while (menu != 0);
     
