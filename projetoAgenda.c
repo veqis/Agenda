@@ -5,9 +5,7 @@
 #define TAM_VET 20
 
 typedef struct {
-    char nome [ TAM_NOME ];
-    int cep;
-    int telefone;
+    char nome [ TAM_NOME ], cep [ TAM_NOME ], telefone [ TAM_NOME ];
     int id;
 } registro;
 
@@ -62,12 +60,11 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         scanf  ( "%[^\n]s", &pessoa[*qtdPessoa].nome );
         
         printf ( "Digite o numero: ");
-        scanf ( "%i", &pessoa[*qtdPessoa].telefone );
+        scanf ( "%s", &pessoa[*qtdPessoa].telefone );
 
         printf ( "Digite o cep: " );
-        scanf ( "%i", &pessoa[*qtdPessoa].cep );
+        scanf ( "%s", &pessoa[*qtdPessoa].cep );
         
-        pessoa[*qtdPessoa].id = *qtdPessoa;
         (*qtdPessoa)++;
 
         printf( "Deseja inserir mais uma pessoa? (S/N)\n" );        
@@ -98,8 +95,8 @@ void editar ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
     printf ( "\n--ID [%i]--\n", pessoa[entrada].id );
     printf ( "Nome----: %s\n", pessoa[entrada].nome );
-    printf ( "Telefone: %i\n", pessoa[entrada].telefone );
-    printf ( "Cep-----: %i\n\n", pessoa[entrada].cep );    
+    printf ( "Telefone: %s\n", pessoa[entrada].telefone );
+    printf ( "Cep-----: %s\n\n", pessoa[entrada].cep );    
     
     getchar();
     printf ( "Digite o nome: " );
@@ -107,10 +104,10 @@ void editar ( registro pessoa [ TAM_VET ], int *qtdPessoa )
     scanf  ( "%[^\n]s", &pessoa[entrada].nome );
     
     printf ( "Digite o numero: ");
-    scanf ( "%i", &pessoa[entrada].telefone );
+    scanf ( "%s", &pessoa[entrada].telefone );
 
     printf ( "Digite o cep: " );
-    scanf ( "%i", &pessoa[entrada].cep );
+    scanf ( "%s", &pessoa[entrada].cep );
 
 }
 
@@ -118,10 +115,10 @@ void imprime ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 {
     for (int i = 0; i < *qtdPessoa; i++)
     {
-        printf ( "\n--ID [%i]--\n", pessoa[i].id );
+        printf ( "\n--ID [%i]--\n", i );
         printf ( "Nome----: %s\n", pessoa[i].nome );
-        printf ( "Telefone: %i\n", pessoa[i].telefone );
-        printf ( "Cep-----: %i\n", pessoa[i].cep );
+        printf ( "Telefone: %s\n", pessoa[i].telefone );
+        printf ( "Cep-----: %s\n", pessoa[i].cep );
     }
 }
 
