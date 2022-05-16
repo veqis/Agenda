@@ -13,8 +13,6 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa );
 void editar ( registro pessoa [ TAM_VET ], int *qtdPessoa );
 void imprime ( registro pessoa [ TAM_VET ], int *qtdPessoa );
 void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa );
-void limparTela ( void );
-void aguardarParaSeguir ( void );
 
 int main()
 {
@@ -145,21 +143,4 @@ void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
     }
     (*qtdPessoa)--;
 
-}
-
-void limparTela ( void )
-{
-    #ifdef __linux__
-        system ( "clear" );
-    #elif _WIN32
-        system ( "cls" );
-    #endif
-}
-
-void aguardarParaSeguir ( void )
-{
-    printf ( "\n\nTecle ENTER para continuar..." );
-    fflush ( stdin );
-    getchar ();
-    limparTela ();
 }
