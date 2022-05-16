@@ -12,6 +12,7 @@ typedef struct {
 void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa );
 void editar ( registro pessoa [ TAM_VET ], int *qtdPessoa );
 void imprime ( registro pessoa [ TAM_VET ], int *qtdPessoa );
+void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa );
 void limparTela ( void );
 void aguardarParaSeguir ( void );
 
@@ -25,6 +26,7 @@ int main()
         printf ( "1 - Adicionar pessoas\n" );
         printf ( "2 - Editar contato\n" );
         printf ( "3 - Imprimir\n" );
+        printf ( "4 - Remover contato\n" );
         printf ( "0 - Finalizar\n" );
         printf ( "Digite sua opcao: " );
         scanf  ( "%i", &menu );
@@ -38,6 +40,8 @@ int main()
         case 2: editar ( pessoa [ TAM_VET ].nome, &qtdPessoa ); break;
         
         case 3: imprime ( pessoa [ TAM_VET ].nome, &qtdPessoa ); break;
+
+        case 4: remover ( pessoa [ TAM_VET].nome, &qtdPessoa ); break;
 
         default: printf ( "Opcao invalida!\n" ); break;
         }
@@ -120,6 +124,28 @@ void imprime ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         printf ( "Telefone: %s\n", pessoa[i].telefone );
         printf ( "Cep-----: %s\n", pessoa[i].cep );
     }
+}
+
+void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
+{
+    int entrada;
+
+    printf ( "Digite o id do contato a ser removido: " );
+    do
+    {
+        scanf ( "%i", &entrada );
+        if (entrada > *qtdPessoa - 1 || entrada < 0)
+        {
+            printf ( "ID nao encontrado, tente novamente: " );
+        }        
+    } while (entrada > *qtdPessoa - 1 || entrada < 0);
+
+    for ( int i = entrada; i <= *qtdPessoa; i++ )
+    {
+        pessoa[ i ] = pessoa[ i + 1 ];
+    }
+    (*qtdPessoa)--;
+
 }
 
 void limparTela ( void )
