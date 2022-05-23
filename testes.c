@@ -70,11 +70,12 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         fflush ( stdin );
         scanf ( "%s", &pessoa[*qtdPessoa].cep );
         
+        //Configuração do id da pessoa
         pessoa[*qtdPessoa].id = *qtdPessoa + 1;
         *qtdPessoa+=1;
 
-        printf( "Deseja inserir mais uma pessoa? (S/N)\n" ); 
-        //Filtragem de entrada       
+        //Filtragem de entrada 
+        printf( "Deseja inserir mais uma pessoa? (S/N)\n" );       
         do
         {
             fflush ( stdin );
@@ -95,8 +96,8 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
     int entrada;
     char continua;
 
-    printf ( "Digite o id do contato a editar: " );
-    //Filtragem de entrada   
+    //Filtragem de entrada
+    printf ( "Digite o id do contato a editar: " );   
     do
     {
         scanf ( "%i", &entrada );
@@ -108,13 +109,13 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
         
     } while (entrada > qtdPessoa || entrada < 0);
 
+    //Impressão do contato
     printf ( "\n--ID [%i]--\n", pessoa[entrada].id );
     printf ( "Nome----: %s\n", pessoa[entrada].nome );
     printf ( "Telefone: %s\n", pessoa[entrada].telefone );
     printf ( "Cep-----: %s\n\n", pessoa[entrada].cep );    
     
     printf("Deseja alterar o contato selecionado? (S/N): ");
-
     //Filtragem de entrada       
     do
     {
@@ -158,18 +159,43 @@ void imprime ( registro pessoa [ TAM_VET ], int qtdPessoa )
 void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 {
     int entrada;
-    entrada+=1;
+    char continua;
 
+    //Filtragem de entrada e exibição de contato
     printf ( "Digite o id do contato a ser removido: " );
     do
     {
         scanf ( "%i", &entrada );
+        entrada--;
         if (entrada > *qtdPessoa || entrada < 0)
         {
             printf ( "ID nao encontrado, tente novamente: " );
         }        
     } while (entrada > *qtdPessoa || entrada < 0);
 
+    printf ( "\n--ID [%i]--\n", pessoa[entrada].id );
+    printf ( "Nome----: %s\n", pessoa[entrada].nome );
+    printf ( "Telefone: %s\n", pessoa[entrada].telefone );
+    printf ( "Cep-----: %s\n\n", pessoa[entrada].cep );
+ 
+    //Filtragem de entrada 
+    printf("Deseja deletar o contato selecionado? (S/N): ");      
+    do
+    {
+        fflush ( stdin );
+        continua = tolower ( getchar () );
+        if (continua != 'n' && continua != 's')
+        {
+            printf( "Entrada invalida, tente novamente: " );
+        }else if ( continua == 'n' )
+        {
+            printf( "Remocao cancelada!" );
+            return 0;
+        }
+        
+    } while ( continua != 'n' && continua != 's' );
+
+    //Realocação de posições e remoção de contato
     for ( int i = entrada; i <= *qtdPessoa; i++ )
     {
         pessoa[ i ] = pessoa[ i + 1 ];
@@ -178,6 +204,7 @@ void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
 }
 
+//Funções para limpar tela
 void limparTela ( void )
 {
     #ifdef __linux__
