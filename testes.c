@@ -5,23 +5,21 @@
 #define TAM_VET 20
 
 typedef struct {
-    char nome [ TAM_NOME ];
-    int cep;
-    int telefone;
+    char nome [ TAM_NOME ], cep [ TAM_NOME ], telefone [ TAM_NOME ];
     int id;
 } registro;
 
-void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa );
-void editar ( registro pessoa [ TAM_VET ], int *qtdPessoa );
-void imprime ( registro pessoa [ TAM_VET ], int *qtdPessoa );
-void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa );
+void addPessoa ( registro pessoa [ ], int *qtdPessoa );
+void editar ( registro pessoa [ ], int qtdPessoa );
+void imprime ( registro pessoa [ ], int qtdPessoa );
+void remover ( registro pessoa [ ], int *qtdPessoa );
 void limparTela ( void );
 void aguardarParaSeguir ( void );
 
 int main()
 {
     registro pessoa [ TAM_VET ];
-    int menu, *qtdPessoa = 0;
+    int menu, qtdPessoa = 0;
     do
     {
         printf ( "     AGENDA\n" );
@@ -37,22 +35,21 @@ int main()
         {
         case 0: break;
 
-        case 1: addPessoa ( pessoa[ TAM_VET ].nome, &qtdPessoa ); break;
+        case 1: addPessoa ( pessoa, &qtdPessoa ); break;
 
-        case 2: editar ( pessoa [ TAM_VET ].nome, &qtdPessoa ); break;
+        case 2: editar ( pessoa, qtdPessoa ); break;
         
-        case 3: imprime ( pessoa [ TAM_VET ].nome, &qtdPessoa ); break;
+        case 3: imprime ( pessoa, qtdPessoa ); break;
 
-        case 4: remove ( pessoa [ TAM_VET].nome, &qtdPessoa ); break;
+        case 4: remover ( pessoa, &qtdPessoa ); break;
 
         default: printf ( "Opcao invalida!\n" ); break;
         }
-
         aguardarParaSeguir ();
+        //função de limpar tela.
     } 
     while (menu != 0);
     
-    return 0;
 }
 
 void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
@@ -61,21 +58,23 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
     do
     {
-        getchar();
         printf ( "Digite o nome: " );
         fflush ( stdin );
         scanf  ( "%[^\n]s", &pessoa[*qtdPessoa].nome );
         
         printf ( "Digite o numero: ");
-        scanf ( "%i", &pessoa[*qtdPessoa].telefone );
+        fflush ( stdin );
+        scanf ( "%s", &pessoa[*qtdPessoa].telefone );
 
         printf ( "Digite o cep: " );
-        scanf ( "%i", &pessoa[*qtdPessoa].cep );
+        fflush ( stdin );
+        scanf ( "%s", &pessoa[*qtdPessoa].cep );
         
-        pessoa[*qtdPessoa].id = *qtdPessoa;
-        (*qtdPessoa)++;
+        pessoa[*qtdPessoa].id = *qtdPessoa + 1;
+        *qtdPessoa+=1;
 
-        printf( "Deseja inserir mais uma pessoa? (S/N)\n" );        
+        printf( "Deseja inserir mais uma pessoa? (S/N)\n" ); 
+        //Filtragem de entrada       
         do
         {
             fflush ( stdin );
@@ -86,25 +85,26 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
     
 }
 
-void editar ( registro pessoa [ TAM_VET ], int *qtdPessoa )
+void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
     int entrada;
 
     printf ( "Digite o id do contato a editar: " );
+    //Filtragem de entrada   
     do
     {
         scanf ( "%i", &entrada );
-        if (entrada > *qtdPessoa - 1 || entrada < 0)
+        if (entrada > qtdPessoa - 1 || entrada < 0)
         {
             printf ( "ID nao encontrado, tente novamente: " );
         }
         
-    } while (entrada > *qtdPessoa - 1 || entrada < 0);
+    } while (entrada > qtdPessoa - 1 || entrada < 0);
 
     printf ( "\n--ID [%i]--\n", pessoa[entrada].id );
     printf ( "Nome----: %s\n", pessoa[entrada].nome );
-    printf ( "Telefone: %i\n", pessoa[entrada].telefone );
-    printf ( "Cep-----: %i\n\n", pessoa[entrada].cep );    
+    printf ( "Telefone: %s\n", pessoa[entrada].telefone );
+    printf ( "Cep-----: %s\n\n", pessoa[entrada].cep );    
     
     getchar();
     printf ( "Digite o novo nome: " );
@@ -112,44 +112,45 @@ void editar ( registro pessoa [ TAM_VET ], int *qtdPessoa )
     scanf  ( "%[^\n]s", &pessoa[entrada].nome );
     
     printf ( "Digite o novo numero: ");
-    scanf ( "%i", &pessoa[entrada].telefone );
+    scanf ( "%s", &pessoa[entrada].telefone );
 
     printf ( "Digite o novo cep: " );
-    scanf ( "%i", &pessoa[entrada].cep );
+    scanf ( "%s", &pessoa[entrada].cep );
 
 }
 
-void imprime ( registro pessoa [ TAM_VET ], int *qtdPessoa )
+void imprime ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
-    for (int i = 0; i < *qtdPessoa; i++)
+    for (int i = 0; i < qtdPessoa; i++)
     {
         printf ( "\n--ID [%i]--\n", pessoa[i].id );
         printf ( "Nome----: %s\n", pessoa[i].nome );
-        printf ( "Telefone: %i\n", pessoa[i].telefone );
-        printf ( "Cep-----: %i\n", pessoa[i].cep );
+        printf ( "Telefone: %s\n", pessoa[i].telefone );
+        printf ( "Cep-----: %s\n", pessoa[i].cep );
     }
 }
 
 void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 {
     int entrada;
+    entrada+=1;
 
     printf ( "Digite o id do contato a ser removido: " );
     do
     {
         scanf ( "%i", &entrada );
-        if (entrada > *qtdPessoa - 1 || entrada < 0)
+        if (entrada > *qtdPessoa || entrada < 0)
         {
             printf ( "ID nao encontrado, tente novamente: " );
-        }
-        
-    } while (entrada > *qtdPessoa - 1 || entrada < 0);
+        }        
+    } while (entrada > *qtdPessoa || entrada < 0);
 
-    for ( int i = entrada; i < *qtdPessoa; i++ )
+    for ( int i = entrada; i <= *qtdPessoa; i++ )
     {
         pessoa[ i ] = pessoa[ i + 1 ];
     }
-    
+    (*qtdPessoa)--;
+
 }
 
 void limparTela ( void )
