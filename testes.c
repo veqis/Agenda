@@ -79,6 +79,11 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         {
             fflush ( stdin );
             continua = tolower ( getchar () );
+            if (continua != 'n' && continua != 's')
+            {
+                printf("Entrada invalida, tente novamente: ");
+            }
+            
         } while (continua != 'n' && continua != 's');
         
     } while (continua != 'n');
@@ -88,25 +93,45 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
     int entrada;
+    char continua;
 
     printf ( "Digite o id do contato a editar: " );
     //Filtragem de entrada   
     do
     {
         scanf ( "%i", &entrada );
-        if (entrada > qtdPessoa - 1 || entrada < 0)
+        entrada--;
+        if (entrada > qtdPessoa || entrada < 0)
         {
             printf ( "ID nao encontrado, tente novamente: " );
         }
         
-    } while (entrada > qtdPessoa - 1 || entrada < 0);
+    } while (entrada > qtdPessoa || entrada < 0);
 
     printf ( "\n--ID [%i]--\n", pessoa[entrada].id );
     printf ( "Nome----: %s\n", pessoa[entrada].nome );
     printf ( "Telefone: %s\n", pessoa[entrada].telefone );
     printf ( "Cep-----: %s\n\n", pessoa[entrada].cep );    
     
-    getchar();
+    printf("Deseja alterar o contato selecionado? (S/N): ");
+
+    //Filtragem de entrada       
+    do
+    {
+        fflush ( stdin );
+        continua = tolower ( getchar () );
+        if (continua != 'n' && continua != 's')
+        {
+            printf( "Entrada invalida, tente novamente: " );
+        }else if ( continua == 'n' )
+        {
+            printf( "Edicao cancelada!" );
+            return 0;
+        }
+        
+    } while ( continua != 'n' && continua != 's' );
+
+    //edição do contato
     printf ( "Digite o novo nome: " );
     fflush ( stdin );
     scanf  ( "%[^\n]s", &pessoa[entrada].nome );
