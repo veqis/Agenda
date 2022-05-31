@@ -7,8 +7,9 @@
 
 typedef struct {
     char nome [ TAM_NOME ], telefone [ TAM_NOME ], redeSocial [ TAM_NOME ], endereco [ TAM_NOME ], email [ TAM_NOME ], tipoContato [ TAM_NOME ];
-    int id, numeroCasa, tipoTelefone, tipoSocial;
-    enum { Celular, Fixo, Comercial, Pessoal, Fax } tipoEndereco;
+    int id, numeroCasa, tipoTelefoneEscolha, tipoSocial, tipoEnderecoEscolha;
+    enum { Celular, Fixo, Comercial, Pessoal, Fax } tipagemContato;
+    enum { Alameda, Avenida, Praca, Rua, Travessa } tipagemEndereco;
 } registro;
 
 void addPessoa ( registro pessoa [ ], int *qtdPessoa );
@@ -71,7 +72,7 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         scanf  ( "%[^\n]s", &pessoa[*qtdPessoa].nome );
         
         //FUNÇÂO QUE ESPECIFICA O TIPO DE TELEFONE
-        printf ( "\n\nSelecione o tipo de telefone\n" );
+        printf ( "\nSelecione o tipo de telefone\n" );
         printf ( "1 - Celular\n" );
         printf ( "2 - Fixo\n" );
         printf ( "3 - Comercial\n" );
@@ -79,29 +80,55 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         printf ( "5 - Fax\n" );
 
         fflush ( stdin );
-        scanf ( "%i", &pessoa[*qtdPessoa].tipoTelefone );
+        scanf ( "%i", &pessoa[*qtdPessoa].tipoTelefoneEscolha );
 
-        switch ( pessoa[*qtdPessoa].tipoTelefone )
+        switch ( pessoa[*qtdPessoa].tipoTelefoneEscolha )
         {
-        case 1: pessoa[*qtdPessoa].tipoEndereco = Celular; break;
+        case 1: pessoa[*qtdPessoa].tipagemContato = Celular; break;
 
-        case 2: pessoa[*qtdPessoa].tipoEndereco = Fixo; break;
+        case 2: pessoa[*qtdPessoa].tipagemContato = Fixo; break;
 
-        case 3: pessoa[*qtdPessoa].tipoEndereco = Comercial; break;
+        case 3: pessoa[*qtdPessoa].tipagemContato = Comercial; break;
 
-        case 4: pessoa[*qtdPessoa].tipoEndereco = Pessoal; break;
+        case 4: pessoa[*qtdPessoa].tipagemContato = Pessoal; break;
 
-        case 5: pessoa[*qtdPessoa].tipoEndereco = Fax; break;
+        case 5: pessoa[*qtdPessoa].tipagemContato = Fax; break;
         
         default: printf ( "Opcao invalida!\n" ); break;
         }
 
-
+        //FUNÇÂO PARA INSERIR O NUMERO
         printf ( "\nDigite o numero de telefone: ");
         fflush ( stdin );
         fgets ( pessoa[*qtdPessoa].telefone, 12, stdin );      
 
-        //TIPO ENDEREÇO
+        //FUNÇÂO QUE ESPECIFICA O TIPO DE ENDEREÇO
+        printf ( "\nSelecione o tipo de endereco\n" );
+        printf ( "1 - Alameda\n" );
+        printf ( "2 - Avenida\n" );
+        printf ( "3 - Praca\n" );
+        printf ( "4 - Rua\n" );
+        printf ( "5 - Travessa\n" );
+
+        fflush ( stdin );
+        scanf ( "%i", &pessoa[*qtdPessoa].tipoEnderecoEscolha );
+
+        switch ( pessoa[*qtdPessoa].tipoEnderecoEscolha )
+        {
+        case 1: pessoa[*qtdPessoa].tipagemEndereco = Alameda; break;
+
+        case 2: pessoa[*qtdPessoa].tipagemEndereco = Avenida; break;
+
+        case 3: pessoa[*qtdPessoa].tipagemEndereco = Praca; break;
+
+        case 4: pessoa[*qtdPessoa].tipagemEndereco = Rua; break;
+
+        case 5: pessoa[*qtdPessoa].tipagemEndereco = Travessa; break;
+        
+        default: printf ( "Opcao invalida!\n" ); break;
+        }
+
+        //FUNÇÂO PARA INSERIR O ENDERECO
         printf ( "\nDigite o endereco: ");
         fflush ( stdin );
         scanf ( "%[^\n]s", &pessoa[*qtdPessoa].endereco );
@@ -199,6 +226,7 @@ void imprime ( registro pessoa [ TAM_VET ], int qtdPessoa )
     {
         printf ( "\n--ID [%i]--\n", pessoa[i].id );
         printf ( "Nome----: %s\n", pessoa[i].nome );
+        verificaEndereco ( pessoa, i );
         printf ( "Endereco: %s\n", pessoa[i].endereco );
         verificaTelefone ( pessoa, i);
         editarTelefone ( pessoa, i );
@@ -306,28 +334,50 @@ void editarTelefone ( registro pessoa [ TAM_VET ], int qtdPessoa )
 
 void verificaTelefone ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
-    if (pessoa[qtdPessoa].tipoEndereco == Celular)
+    if (pessoa[qtdPessoa].tipagemContato == Celular)
     {
         printf("Telefone: Celular ");
     }
-    if (pessoa[qtdPessoa].tipoEndereco == Fixo)
+    if (pessoa[qtdPessoa].tipagemContato == Fixo)
     {
         printf("Telefone: Fixo ");
     }
-    if (pessoa[qtdPessoa].tipoEndereco == Comercial)
+    if (pessoa[qtdPessoa].tipagemContato == Comercial)
     {
         printf("Telefone: Comercial ");
     }
-    if (pessoa[qtdPessoa].tipoEndereco == Pessoal)
+    if (pessoa[qtdPessoa].tipagemContato == Pessoal)
     {
         printf("Telefone: Pessoal ");
     }
-    if (pessoa[qtdPessoa].tipoEndereco == Fax)
+    if (pessoa[qtdPessoa].tipagemContato == Fax)
     {
         printf("Telefone: Fax ");
+    }  
+}
+
+void verificaEndereco ( registro pessoa [ TAM_VET ], int qtdPessoa )
+{
+    if (pessoa[qtdPessoa].tipagemContato == Travessa)
+    {
+        printf("Endereco: Travessa ");
     }
-    
-    
+    if (pessoa[qtdPessoa].tipagemContato == Avenida)
+    {
+        printf("Endereco: Avenida ");
+    }
+    if (pessoa[qtdPessoa].tipagemContato == Praca)
+    {
+        printf("Endereco: Praca ");
+    }
+    if (pessoa[qtdPessoa].tipagemContato == Rua)
+    {
+        printf("Endereco: Rua ");
+    }
+    if (pessoa[qtdPessoa].tipagemContato == Travessa)
+    {
+        printf("Endereco: Travessa ");
+    }  
 }
 //Funcões para limpar tela
 void limparTela ( void )
