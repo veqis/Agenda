@@ -8,7 +8,7 @@
 typedef struct {
     char nome [ TAM_NOME ], telefone [ TAM_NOME ], redeSocial [ TAM_NOME ], endereco [ TAM_NOME ], email [ TAM_NOME ], tipoContato [ TAM_NOME ];
     int id, numeroCasa, tipoTelefone, tipoSocial;
-    enum { Celular, Fixo } tipoEndereco;
+    enum { Celular, Fixo, Comercial, Pessoal, Fax } tipoEndereco;
 } registro;
 
 void addPessoa ( registro pessoa [ ], int *qtdPessoa );
@@ -65,15 +65,18 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
     do
     {
-        //NOME CONTATO
-        printf ( "Digite o nome: " );
+        //NOME DO CONTATO
+        printf ( "\nDigite o nome: " );
         fflush ( stdin );
         scanf  ( "%[^\n]s", &pessoa[*qtdPessoa].nome );
         
-        //TIPO TELEFONE
-        printf ( "Selecione o tipo de telefone\n" );
+        //FUNÇÂO QUE ESPECIFICA O TIPO DE TELEFONE
+        printf ( "\n\nSelecione o tipo de telefone\n" );
         printf ( "1 - Celular\n" );
         printf ( "2 - Fixo\n" );
+        printf ( "3 - Comercial\n" );
+        printf ( "4 - Pessoal\n" );
+        printf ( "5 - Fax\n" );
 
         fflush ( stdin );
         scanf ( "%i", &pessoa[*qtdPessoa].tipoTelefone );
@@ -83,17 +86,23 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         case 1: pessoa[*qtdPessoa].tipoEndereco = Celular; break;
 
         case 2: pessoa[*qtdPessoa].tipoEndereco = Fixo; break;
+
+        case 3: pessoa[*qtdPessoa].tipoEndereco = Comercial; break;
+
+        case 4: pessoa[*qtdPessoa].tipoEndereco = Pessoal; break;
+
+        case 5: pessoa[*qtdPessoa].tipoEndereco = Fax; break;
         
         default: printf ( "Opcao invalida!\n" ); break;
         }
 
 
-        printf ( "Digite o numero de telefone: ");
+        printf ( "\nDigite o numero de telefone: ");
         fflush ( stdin );
         fgets ( pessoa[*qtdPessoa].telefone, 12, stdin );      
 
         //TIPO ENDEREÇO
-        printf ( "Digite o endereco: ");
+        printf ( "\nDigite o endereco: ");
         fflush ( stdin );
         scanf ( "%[^\n]s", &pessoa[*qtdPessoa].endereco );
         
@@ -113,14 +122,14 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         *qtdPessoa+=1;
 
         //Filtragem de entrada 
-        printf( "Deseja inserir mais uma pessoa? (S/N)\n" );       
+        printf( "\nDeseja inserir mais uma pessoa? (S/N)\n" );       
         do
         {
             fflush ( stdin );
             continua = tolower ( getchar () );
             if (continua != 'n' && continua != 's')
             {
-                printf("Entrada invalida, tente novamente: ");
+                printf("\nEntrada invalida, tente novamente: ");
             }
             
         } while (continua != 'n' && continua != 's');
@@ -297,13 +306,25 @@ void editarTelefone ( registro pessoa [ TAM_VET ], int qtdPessoa )
 
 void verificaTelefone ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
-    if (pessoa[qtdPessoa].tipoEndereco = Celular)
+    if (pessoa[qtdPessoa].tipoEndereco == Celular)
     {
         printf("Telefone: Celular ");
     }
-    if (pessoa[qtdPessoa].tipoEndereco = Fixo)
+    if (pessoa[qtdPessoa].tipoEndereco == Fixo)
     {
         printf("Telefone: Fixo ");
+    }
+    if (pessoa[qtdPessoa].tipoEndereco == Comercial)
+    {
+        printf("Telefone: Comercial ");
+    }
+    if (pessoa[qtdPessoa].tipoEndereco == Pessoal)
+    {
+        printf("Telefone: Pessoal ");
+    }
+    if (pessoa[qtdPessoa].tipoEndereco == Fax)
+    {
+        printf("Telefone: Fax ");
     }
     
     
