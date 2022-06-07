@@ -17,7 +17,7 @@ typedef struct {
     char endereco [ TAM_NOME ];
     char email [ TAM_NOME ];
     char tipoContato [ TAM_NOME ];
-    int numeroCasa;
+    int numeroCasa, id;
     enum tipoEndereco tpEnd;
     enum tipoContato tpCon;
     enum tipoSocial tpSoci;
@@ -130,6 +130,7 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         fflush ( stdin );
         scanf ( "%s", &pessoa[*qtdPessoa].redeSocial );
 
+        pessoa[*qtdPessoa].id = *qtdPessoa + 1;
         *qtdPessoa+=1;
 
         //Filtragem de entrada 
@@ -173,8 +174,56 @@ void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
     sprintf ( subContato, "%s %s", obterNomeTelefone ( pessoa[qtdPessoa].tpCon ), pessoa[i].telefone );
     sprintf ( subSocial, "%s %s", obterNomeSocial ( pessoa[qtdPessoa].tpSoci ), pessoa[i].redeSocial );
 
-    printf ( "%-15s | %-20s | %-10i | %-15s | %s |\n", subNome, subEndereco, subContato, pessoa[i].email, subSocial );
-    //        Nome    Ende.   Tele.   Email   R.S.
+    printf ( "| %i | %-15s | %-20s | %-10i | %-15s | %s |\n", pessoa[i].id, subNome, subEndereco, subContato, pessoa[i].email, subSocial );
+    //          Id   Nome    Ende.   Tele.   Email   R.S.
+}
+
+void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
+{
+    int entrada;
+    char continua;
+
+    //Filtragem de entrada e exibicão de contato
+    printf ( "Digite o id do contato a ser removido: " );
+    do
+    {
+        scanf ( "%i", &entrada );
+        entrada--;
+        if (entrada > *qtdPessoa || entrada < 0)
+        {
+            printf ( "ID nao encontrado, tente novamente: " );
+        }        
+    } while (entrada > *qtdPessoa || entrada < 0);
+
+    printf ( "\n--ID [%i]--\n", pessoa[entrada].id );
+    printf ( "Nome----: %s\n", pessoa[entrada].nome );
+    editarTelefone ( pessoa, entrada );
+
+ 
+    //Filtragem de entrada 
+    printf("Deseja deletar o contato selecionado? (S/N): ");      
+    do
+    {
+        fflush ( stdin );
+        continua = tolower ( getchar () );
+        if (continua != 'n' && continua != 's')
+        {
+            printf( "Entrada invalida, tente novamente: " );
+        }else if ( continua == 'n' )
+        {
+            printf( "Remocao cancelada!" );
+            return 0;
+        }
+        
+    } while ( continua != 'n' && continua != 's' );
+
+    //Realocacão de posicões e remocão de contato
+    for ( int i = entrada; i <= *qtdPessoa; i++ )
+    {
+        pessoa[ i ] = pessoa[ i + 1 ];
+    }
+    (*qtdPessoa)--;
+
 }
 
 char *obterNomeEndereco ( enum tipoEndereco tpEnd )
