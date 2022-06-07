@@ -23,7 +23,9 @@ typedef struct {
     enum tipoSocial tpSoci;
 } registro;
 
+char *obterNomeTelefone ( enum tipoEndereco tpCon );
 char *obterNomeEndereco ( enum tipoEndereco tpEnd );
+char *obterNomeSocial ( enum tipoEndereco tpSoci );
 void limparTela ( void );
 void aguardarParaSeguir ( void );
 
