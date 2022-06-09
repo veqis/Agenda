@@ -86,7 +86,6 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         printf ( "4 - Rua\n" );
         printf ( "5 - Travessa\n" );
         printf ( "6 - Rodovia\n" );
-        fflush ( stdin );
         scanf ( "%i", &pessoa[*qtdPessoa].tpEnd );
 
         //FUNÇÂO PARA INSERIR O ENDERECO
@@ -104,18 +103,12 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         printf ( "3 - Comercial\n" );
         printf ( "4 - Pessoal\n" );
         printf ( "5 - Fax\n" );
-        fflush ( stdin );
         scanf ( "%i", &pessoa[*qtdPessoa].tpCon );
 
         //FUNÇÂO PARA INSERIR O NUMERO
         printf ( "\nDigite o numero de telefone: ");
         fflush ( stdin );
-        fgets ( pessoa[*qtdPessoa].telefone, 12, stdin );  
-
-        //FUNÇÂO PARA INSERIR EMAIL
-        printf ( "Digite o e-mail ");
-        fflush ( stdin );
-        scanf ( "%s", &pessoa[*qtdPessoa].email );
+        scanf ( "%s", &pessoa[*qtdPessoa].telefone );
 
         //FUNÇÂO QUE ESPECIFICA O TIPO DE REDE SOCIAL
         printf ( "\nSelecione o tipo de rede social\n" );
@@ -123,12 +116,16 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         printf ( "2 - Facebook\n" );
         printf ( "3 - LinkedIn\n" );
         printf ( "4 - outro\n" );
-        fflush ( stdin );
         scanf ( "%i", &pessoa[*qtdPessoa].tpSoci );
 
         printf ( "\nDigite a rede social: ");
         fflush ( stdin );
         scanf ( "%s", &pessoa[*qtdPessoa].redeSocial );
+
+        //FUNÇÂO PARA INSERIR EMAIL
+        printf ( "Digite o e-mail ");
+        fflush ( stdin );
+        scanf ( "%s", &pessoa[*qtdPessoa].email );
 
         pessoa[*qtdPessoa].id = *qtdPessoa + 1;
         *qtdPessoa+=1;
@@ -164,8 +161,8 @@ void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
     char subNome [ 16 ];
     char subEndereco  [ 21 ];
     char subBairro [ 11 ];
-    char subContato [ 20 ];
-    char subSocial [ 20 ];
+    char subContato [ 21 ];
+    char subSocial [ 21 ];
 
     strncpy ( subNome , pessoa[i].nome, 15 );
     strncpy ( subEndereco  , pessoa[i].endereco, 20 );
@@ -174,8 +171,8 @@ void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
     sprintf ( subContato, "%s %s", obterNomeTelefone ( pessoa[qtdPessoa].tpCon ), pessoa[i].telefone );
     sprintf ( subSocial, "%s %s", obterNomeSocial ( pessoa[qtdPessoa].tpSoci ), pessoa[i].redeSocial );
 
-    printf ( "| %i | %-15s | %-20s | %-10i | %-15s | %s |\n", pessoa[i].id, subNome, subEndereco, subContato, pessoa[i].email, subSocial );
-    //          Id   Nome    Ende.   Tele.   Email   R.S.
+    printf ( "| %i | %-15s | %-20s | %-15s | %-15s | %s |\n", pessoa[i].id, subNome, subEndereco, subContato, subSocial, pessoa[i].email );
+    //          Id   Nome    Ende.   Tele.    R.S.   Email
 }
 
 void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
@@ -198,8 +195,8 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 
     //Impressão do contato
     imprime ( pessoa, entrada, qtdPessoa );
-
     
+
     printf("Deseja alterar o contato selecionado? (S/N): ");
     //Filtragem de entrada       
     do
@@ -246,7 +243,6 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
         printf ( "4 - Rua\n" );
         printf ( "5 - Travessa\n" );
         printf ( "6 - Rodovia\n" );
-        fflush ( stdin );
         scanf ( "%i", &pessoa[entrada].tpEnd );
         break;
     case 3:
@@ -258,10 +254,37 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
         printf ( "Digite o novo numero da casa: " );
         scanf ( "%i", &pessoa[entrada].numeroCasa );   
         break;
-    case 0:
-        printf ( "Digite o novo numero de telefone: ");
+    case 5:
+        printf ( "\nSelecione o novo tipo de telefone\n" );
+        printf ( "1 - Celular\n" );
+        printf ( "2 - Fixo\n" );
+        printf ( "3 - Comercial\n" );
+        printf ( "4 - Pessoal\n" );
+        printf ( "5 - Fax\n" );
+        scanf ( "%i", &pessoa[entrada].tpCon );  
+        break;
+    case 6:
+        printf ( "\nDigite o novo numero de telefone: ");
         fflush ( stdin );
         scanf ( "%s", &pessoa[entrada].telefone );
+        break;
+    case 7:
+        printf ( "\nSelecione o tipo de rede social\n" );
+        printf ( "1 - Instagram\n" );
+        printf ( "2 - Facebook\n" );
+        printf ( "3 - LinkedIn\n" );
+        printf ( "4 - outro\n" );
+        scanf ( "%i", &pessoa[entrada].tpSoci );
+        break;
+    case 8:
+        printf ( "\nDigite a rede social: ");
+        fflush ( stdin );
+        scanf ( "%s", &pessoa[entrada].redeSocial );
+        break;
+    case 9:
+        printf ( "Digite o e-mail ");
+        fflush ( stdin );
+        scanf ( "%s", &pessoa[entrada].email );
         break;
     default: printf ( "Opcao invalida!\n" ); break;
     }
