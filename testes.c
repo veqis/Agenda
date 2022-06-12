@@ -3,21 +3,29 @@
 #include <string.h>
 
 #define TAM_NOME 200
-#define TAM_VET 20
+#define TAM_VET 10
+
+enum tipoEndereco { Alameda, Avenida, Praca, Rua, Travessa };
+enum tipoContato { Celular, Fixo, Comercial, Pessoal, Fax };
+enum tipoSocial { Instagram, Facebook, LinkedIn, outro };
+
 
 typedef struct {
-    char nome [ TAM_NOME ], telefone [ TAM_NOME ], redeSocial [ TAM_NOME ], endereco [ TAM_NOME ], email [ TAM_NOME ];
-    int id, numeroCasa, tipoTelefone, tipoSocial;
+    char nome [ TAM_NOME ];
+    char telefone [ TAM_NOME ];
+    char redeSocial [ TAM_NOME ];
+    char endereco [ TAM_NOME ];
+    char email [ TAM_NOME ];
+    char tipoContato [ TAM_NOME ];
+    int numeroCasa, id;
+    enum tipoEndereco tpEnd;
+    enum tipoContato tpCon;
+    enum tipoSocial tpSoci;
 } registro;
 
-void addPessoa ( registro pessoa [ ], int *qtdPessoa );
-void editar ( registro pessoa [ ], int qtdPessoa );
-void imprime ( registro pessoa [ ], int qtdPessoa );
-void remover ( registro pessoa [ ], int *qtdPessoa );
-void consultar ( registro pessoa [ ], int qtdPessoa);
-void editarCep ( registro pessoa [ ], int qtdPessoa);
-void addRedeSocial ( registro pessoa [ ], int *qtdpessoa );
-void addTelefone ( registro pessoa [ ], int *qtdPessoa);
+char *obterNomeTelefone ( int tpCon );
+char *obterNomeEndereco ( int tpEnd );
+char *obterNomeSocial ( int tpSoci );
 void limparTela ( void );
 void aguardarParaSeguir ( void );
 
@@ -49,83 +57,88 @@ int main()
 
         case 4: remover ( pessoa, &qtdPessoa ); break;
 
-        case 5: imprime ( pessoa, qtdPessoa ); break;
+        case 5: imprimeTodos ( pessoa, qtdPessoa ); break;
 
         default: printf ( "Opcao invalida!\n" ); break;
         }
-        //função de limpar tela.
+        //funcão de limpar tela.
         aguardarParaSeguir ();
     } 
     while (menu != 0);
-    
+
 }
 
 void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 {
     char continua;
-
     do
     {
-        printf ( "Digite o nome: " );
+        //NOME DO CONTATO
+        printf ( "\nDigite o nome: " );
         fflush ( stdin );
-        scanf  ( "%[^\n]s", &pessoa[*qtdPessoa].nome );
-        
-        addTelefone ( pessoa , &qtdPessoa );
+        scanf  ( "%[^\n]s", &pessoa[*qtdPessoa].nome );    
 
-        //TELEFONE
-        printf ( "Selecione o tipo de telefone\n" );
-        printf ( "1 - Celular\n" );
-        printf ( "2 - Fixo\n" );
+        //FUNÇÂO QUE ESPECIFICA O TIPO DE ENDEREÇO
+        printf ( "\nSelecione o tipo de endereco\n" );
+        printf ( "0 - Alameda\n" );
+        printf ( "1 - Avenida\n" );
+        printf ( "2 - Praca\n" );
+        printf ( "3 - Rua\n" );
+        printf ( "4 - Travessa\n" );
+        printf ( "5 - Rodovia\n" );
+        scanf ( "%i", &pessoa[*qtdPessoa].tpEnd );
+
+        //FUNÇÂO PARA INSERIR O ENDERECO
+        printf ( "\nDigite o endereco: ");
         fflush ( stdin );
-        scanf ( "%s", &pessoa[*qtdPessoa].tipoTelefone );
-
-        if (pessoa[*qtdPessoa].tipoTelefone == '1')
-        {
-            pessoa[*qtdPessoa].tipoTelefone = "Celular";
-        }else if (pessoa[*qtdPessoa].tipoTelefone == '2')
-        {
-            pessoa[*qtdPessoa].tipoTelefone = "Fixo";
-        }else{
-            do
-            {
-                printf ( "Entrada invalida! Tente novamente\n\n" );
-
-                printf ( "Selecione o tipo de telefone\n" );
-                printf ( "1 - Celular" );
-                printf ( "2 - Fixo" );
-                fflush ( stdin );
-                scanf ( "%s", &pessoa[*qtdPessoa].tipoTelefone );
-            } while (pessoa[*qtdPessoa].tipoTelefone == '1' || pessoa[*qtdPessoa].tipoTelefone == '2');
-            
-        }
-
-        printf ( "Digite o numero de telefone: ");
-        fflush ( stdin );
-        scanf ( "%s", &pessoa[*qtdPessoa].telefone );
-        //TELEFONE
+        scanf ( "%[^\n]s", &pessoa[*qtdPessoa].endereco );
         
         printf ( "Digite o numero da casa: " );
         scanf ( "%i", &pessoa[*qtdPessoa].numeroCasa );
+        
+        //FUNÇÂO QUE ESPECIFICA O TIPO DE TELEFONE
+        printf ( "\nSelecione o tipo de telefone\n" );
+        printf ( "0 - Celular\n" );
+        printf ( "1 - Fixo\n" );
+        printf ( "2 - Comercial\n" );
+        printf ( "3 - Pessoal\n" );
+        printf ( "4 - Fax\n" );
+        scanf ( "%i", &pessoa[*qtdPessoa].tpCon );
 
-        /*printf ( "Digite o e-mail ");
+        //FUNÇÂO PARA INSERIR O NUMERO
+        printf ( "\nDigite o numero de telefone: ");
         fflush ( stdin );
-        scanf ( "%s", &pessoa[*qtdPessoa].email );*/
+        scanf ( "%s", &pessoa[*qtdPessoa].telefone );
 
-        addRedeSocial ( pessoa, &qtdPessoa );
+        //FUNÇÂO QUE ESPECIFICA O TIPO DE REDE SOCIAL
+        printf ( "\nSelecione o tipo de rede social\n" );
+        printf ( "0 - Instagram\n" );
+        printf ( "1 - Facebook\n" );
+        printf ( "2 - LinkedIn\n" );
+        printf ( "3 - outro\n" );
+        scanf ( "%i", &pessoa[*qtdPessoa].tpSoci );
 
-        //Configuração do id da pessoa
+        printf ( "\nDigite a rede social: ");
+        fflush ( stdin );
+        scanf ( "%s", &pessoa[*qtdPessoa].redeSocial );
+
+        //FUNÇÂO PARA INSERIR EMAIL
+        printf ( "Digite o e-mail ");
+        fflush ( stdin );
+        scanf ( "%s", &pessoa[*qtdPessoa].email );
+
         pessoa[*qtdPessoa].id = *qtdPessoa + 1;
         *qtdPessoa+=1;
 
         //Filtragem de entrada 
-        printf( "Deseja inserir mais uma pessoa? (S/N)\n" );       
+        printf( "\nDeseja inserir mais uma pessoa? (S/N)\n" );       
         do
         {
             fflush ( stdin );
             continua = tolower ( getchar () );
             if (continua != 'n' && continua != 's')
             {
-                printf("Entrada invalida, tente novamente: ");
+                printf("\nEntrada invalida, tente novamente: ");
             }
             
         } while (continua != 'n' && continua != 's');
@@ -134,9 +147,39 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
     
 }
 
+void imprimeTodos ( registro pessoa [ TAM_VET ], int qtdPessoa )
+{
+
+    for (int i = 0; i < qtdPessoa; i++)
+    {
+        imprime ( pessoa, i, qtdPessoa );
+    }
+}
+
+void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
+{
+    char subNome [ 16 ];
+    char subEndereco  [ 21 ];
+    char subBairro [ 11 ];
+    char subContato [ 21 ];
+    char subSocial [ 21 ];
+
+    strncpy ( subNome , pessoa[i].nome, 15 );
+    strncpy ( subEndereco  , pessoa[i].endereco, 20 );
+
+    sprintf ( subEndereco, "%s, %i", pessoa[i].endereco, pessoa[i].numeroCasa);
+    sprintf ( subContato, "%s", pessoa[i].telefone );
+    sprintf ( subSocial, "%s", pessoa[i].redeSocial );
+
+    printf ( "| %i | %-15s | %s %-20s | %s %-15s | %s %-15s | %s |\n", pessoa[i].id, subNome, obterNomeEndereco ( pessoa[qtdPessoa].tpEnd ), subEndereco, obterNomeTelefone ( pessoa[qtdPessoa].tpCon ), subContato, obterNomeSocial ( pessoa[qtdPessoa].tpSoci ), subSocial, pessoa[i].email );
+    //          Id   Nome    Ende.       Tele.      R.S.     Email
+    printf ("AAAAAAAAAAAAAAAAAAAAA VE ISSSSSSSOOOOOOOOOOOOO%s", pessoa[i].tpCon);
+}
+
+
 void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
-    int entrada;
+    int entrada, menu;
     char continua;
 
     //Filtragem de entrada
@@ -153,12 +196,9 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
     } while (entrada > qtdPessoa || entrada < 0);
 
     //Impressão do contato
-    printf ( "\n--ID [%i]--\n", pessoa[entrada].id );
-    printf ( "Nome----: %s\n", pessoa[entrada].nome );
-    editarTelefone ( pessoa, entrada );
-    editarCep ( pessoa, entrada );   
-
+    imprime ( pessoa, entrada, qtdPessoa );
     
+
     printf("Deseja alterar o contato selecionado? (S/N): ");
     //Filtragem de entrada       
     do
@@ -176,30 +216,79 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
         
     } while ( continua != 'n' && continua != 's' );
 
-    //edição do contato
-    printf ( "Digite o novo nome: " );
-    fflush ( stdin );
-    scanf  ( "%[^\n]s", &pessoa[entrada].nome );
-    
-    printf ( "Digite o novo numero: ");
-    scanf ( "%s", &pessoa[entrada].telefone );
+    //edicão do contato
+    printf ( "Selecione o campo a editar: \n" );
+    printf ( "1 - Nome\n" );
+    printf ( "2 - Tipo endereco\n" );
+    printf ( "3 - Endereco\n");
+    printf ( "4 - Numero\n" );
+    printf ( "5 - Tipo telefone\n" );
+    printf ( "6 - Telefone\n" );
+    printf ( "7 - Tipo social\n" );
+    printf ( "8 - Rede social\n" );
+    printf ( "9 - E-mail\n" );
+    printf ( "Digite sua opcao: " );
+    scanf  ( "%i", &menu );
 
-    printf ( "Digite o novo numero de telefone: ");
-    fflush ( stdin );
-    scanf ( "%s", &pessoa[entrada].telefone );
-
-}
-
-void imprime ( registro pessoa [ TAM_VET ], int qtdPessoa )
-{
-    for (int i = 0; i < qtdPessoa; i++)
+    switch (menu)
     {
-        printf ( "\n--ID [%i]--\n", pessoa[i].id );
-        printf ( "Nome----: %s\n", pessoa[i].nome );
-        printf ( "Endereco: %s\n", pessoa[i].endereco );
-        editarTelefone ( pessoa, i );
-        editarCep ( pessoa, i);
-
+    case 1:
+        printf ( "Digite o novo nome: " );
+        fflush ( stdin );
+        scanf  ( "%[^\n]s", &pessoa[entrada].nome );
+        break;
+    case 2:
+        printf ( "\nSelecione o novo tipo de endereco\n" );
+        printf ( "0 - Alameda\n" );
+        printf ( "1 - Avenida\n" );
+        printf ( "2 - Praca\n" );
+        printf ( "3 - Rua\n" );
+        printf ( "4 - Travessa\n" );
+        printf ( "5 - Rodovia\n" );
+        scanf ( "%i", &pessoa[entrada].tpEnd );
+        break;
+    case 3:
+        printf ( "\nDigite o novo endereco: ");
+        fflush ( stdin );
+        scanf ( "%[^\n]s", &pessoa[entrada].endereco );
+        break;
+    case 4:
+        printf ( "Digite o novo numero da casa: " );
+        scanf ( "%i", &pessoa[entrada].numeroCasa );   
+        break;
+    case 5:
+        printf ( "\nSelecione o novo tipo de telefone\n" );
+        printf ( "0 - Celular\n" );
+        printf ( "1 - Fixo\n" );
+        printf ( "2 - Comercial\n" );
+        printf ( "3 - Pessoal\n" );
+        printf ( "4 - Fax\n" );
+        scanf ( "%i", &pessoa[entrada].tpCon );  
+        break;
+    case 6:
+        printf ( "\nDigite o novo numero de telefone: ");
+        fflush ( stdin );
+        scanf ( "%s", &pessoa[entrada].telefone );
+        break;
+    case 7:
+        printf ( "\nSelecione o tipo de rede social\n" );
+        printf ( "0 - Instagram\n" );
+        printf ( "1 - Facebook\n" );
+        printf ( "2 - LinkedIn\n" );
+        printf ( "3 - outro\n" );
+        scanf ( "%i", &pessoa[entrada].tpSoci );
+        break;
+    case 8:
+        printf ( "\nDigite a rede social: ");
+        fflush ( stdin );
+        scanf ( "%s", &pessoa[entrada].redeSocial );
+        break;
+    case 9:
+        printf ( "Digite o e-mail ");
+        fflush ( stdin );
+        scanf ( "%s", &pessoa[entrada].email );
+        break;
+    default: printf ( "Opcao invalida!\n" ); break;
     }
 }
 
@@ -208,7 +297,7 @@ void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
     int entrada;
     char continua;
 
-    //Filtragem de entrada e exibição de contato
+    //Filtragem de entrada e exibicão de contato
     printf ( "Digite o id do contato a ser removido: " );
     do
     {
@@ -220,11 +309,7 @@ void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         }        
     } while (entrada > *qtdPessoa || entrada < 0);
 
-    printf ( "\n--ID [%i]--\n", pessoa[entrada].id );
-    printf ( "Nome----: %s\n", pessoa[entrada].nome );
-    editarTelefone ( pessoa, entrada );
-    editarCep ( pessoa, entrada);
-
+    imprime ( pessoa, entrada, *qtdPessoa );
  
     //Filtragem de entrada 
     printf("Deseja deletar o contato selecionado? (S/N): ");      
@@ -243,7 +328,7 @@ void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         
     } while ( continua != 'n' && continua != 's' );
 
-    //Realocação de posições e remoção de contato
+    //Realocacão de posicões e remocão de contato
     for ( int i = entrada; i <= *qtdPessoa; i++ )
     {
         pessoa[ i ] = pessoa[ i + 1 ];
@@ -252,12 +337,10 @@ void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
 }
 
-void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa)
+void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
     int entrada;
-    char continua;
-
-    printf( "Digite o ID do contato que deseja consultar: " );
+    printf ( "Digite o id do contato: " );   
     do
     {
         scanf ( "%i", &entrada );
@@ -269,146 +352,48 @@ void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa)
         
     } while (entrada > qtdPessoa || entrada < 0);
 
-    printf ( "\n--ID [%i]--\n", pessoa[entrada].id );
-    printf ( "Nome----: %s\n", pessoa[entrada].nome );
-    editarTelefone ( pessoa, entrada );
-    editarCep ( pessoa, entrada);
-
-
-    //Filtragem de entrada 
-    printf( "Deseja consultar outro contato? (S/N)\n" );       
-    do
-    {
-        fflush ( stdin );
-        continua = tolower ( getchar () );
-        if (continua != 'n' && continua != 's')
-        {
-            printf("Entrada invalida, tente novamente: ");
-        }
-        
-    } while (continua != 'n' && continua != 's');
-        
+        imprime ( pessoa, entrada, qtdPessoa );
 }
 
-/*void editarCep ( registro pessoa [ TAM_VET ], int qtdPessoa)
+char *obterNomeEndereco ( int tpEnd )
 {
-    //Função usada para pontuar o numero de cep com a barra no local correto
-    char parte1[6], parte2[5];
+    const char *nomeEndereco[] =
+    {
+        "Al.", "Av.", "Pr.", "Rod.", "R.", "Tr."
+    };
 
-    strncpy ( parte1, &pessoa[ qtdPessoa ].cep[ 0 ], 5 );
-    strncpy ( parte2, &pessoa[ qtdPessoa ].cep[ 5 ], 4 );
-    parte1 [ 5 ] = parte2 [ 4 ] = '\0';
+    return ( nomeEndereco [ tpEnd ] );
+}
 
-    printf ( "Cep-----: %s-%s\n", parte1, parte2 );
+char *obterNomeTelefone ( int tpCon )
+{
+    const char *nomeTelefone[] =
+    {
+        "Cel.", "Fix.", "Com.", "Pes.", "Fax."
+    };
+    
+    return ( nomeTelefone [ tpCon ] );
+}
+
+char *obterNomeSocial ( int tpSoci )
+{
+    const char *nomeSocial[] =
+    {
+        "Ins.", "Face.", "Lin.", ""
+    };
+
+    return ( nomeSocial [ tpSoci ] );
+}
+
+/*void salvar (  )
+{
+    FILE *file;
+    file = fopen ( "teste.txt", "w" );
+    fprintf ( file,"teste" );
+    fclose ( file );
 }*/
 
-void editarTelefone ( registro pessoa [ TAM_VET ], int qtdPessoa )
-{
-    //Função que pega o numero de telefone e separa o ddd e cloca a barra entre os numeros
-    char DDD[3], parte1[6], parte2[6];
-
-    strncpy ( DDD, &pessoa [ qtdPessoa ].telefone [ 0 ], 2 );
-    strncpy ( parte1, &pessoa [ qtdPessoa ].telefone [ 2 ], 5 );
-    strncpy ( parte2, &pessoa [ qtdPessoa ].telefone [ 7 ], 5 );
-    DDD [ 2 ] = parte1 [ 5 ] = parte2 [ 5 ] = '\0';
-
-    printf ( "Telefone - %s: (%s) %s-%s\n", pessoa[qtdPessoa].tipoTelefone, DDD, parte1, parte2);
-}
-
-void addRedeSocial ( registro pessoa [ TAM_VET ], int *qtdPessoa )
-{
-
-        printf ( "Selecione a rede social\n" );
-        printf ( "1 - Instagram\n" );
-        printf ( "2 - Facebook\n" );
-        printf ( "3 - LinkedIn\n" );
-        printf ( "4 - Twitter\n" );
-        fflush ( stdin );
-        scanf ( "%s", &pessoa[*qtdPessoa].tipoSocial );
-
-        if (pessoa[*qtdPessoa].tipoSocial == '1')
-        {
-            pessoa[*qtdPessoa].tipoSocial = "Instagram";
-        }else if (pessoa[*qtdPessoa].tipoSocial == '2')
-        {
-            pessoa[*qtdPessoa].tipoSocial = "Facebook";
-        }else if (pessoa[*qtdPessoa].tipoSocial == '3')
-        {
-            pessoa[*qtdPessoa].tipoSocial = "LinkedIn";
-        }else if (pessoa[*qtdPessoa].tipoSocial == '4')
-        {
-            pessoa[*qtdPessoa].tipoSocial = "Twitter";
-        }else{
-            do
-            {
-                printf ( "Entrada invalida! Tente novamente\n\n" );
-
-                printf ( "Selecione o tipo de endereço\n" );
-                printf ( "1 - Travessa\n" );
-                printf ( "2 - Alameda\n" );
-                printf ( "3 - Avenida\n" );
-                printf ( "4 - Praça\n" );
-                fflush ( stdin );
-                scanf ( "%s", &pessoa[*qtdPessoa].tipoSocial );
-            } while (pessoa[*qtdPessoa].tipoSocial == '1' || pessoa[*qtdPessoa].tipoSocial == '2' || pessoa[*qtdPessoa].tipoSocial == '3' || pessoa[*qtdPessoa].tipoSocial == '4');
-            
-        }
-
-        printf ( "Digite a rede social: " );
-        scanf ( "%i", &pessoa[*qtdPessoa].redeSocial );
-
-}
-
-void addTelefone ( registro pessoa [ TAM_VET ], int *qtdPessoa)
-{
- printf ( "Selecione o tipo de endereco\n" );
-        printf ( "1 - Travessa\n" );
-        printf ( "2 - Alameda\n" );
-        printf ( "3 - Avenida\n" );
-        printf ( "4 - Praça\n" );
-        printf ( "5 - Rua\n" );
-        fflush ( stdin );
-        scanf ( "%s", &pessoa[*qtdPessoa].tipoTelefone );
-
-        if (pessoa[*qtdPessoa].tipoTelefone == '1')
-        {
-            pessoa[*qtdPessoa].tipoTelefone = "Travessa";
-        }else if (pessoa[*qtdPessoa].tipoTelefone == '2')
-        {
-            pessoa[*qtdPessoa].tipoTelefone = "Alameda";
-        }else if (pessoa[*qtdPessoa].tipoTelefone == '3')
-        {
-            pessoa[*qtdPessoa].tipoTelefone = "Avenida";
-        }else if (pessoa[*qtdPessoa].tipoTelefone == '4')
-        {
-            pessoa[*qtdPessoa].tipoTelefone = "Praça";
-        }else if (pessoa[*qtdPessoa].tipoTelefone == '5')
-        {
-            pessoa[*qtdPessoa].tipoTelefone = "Rua";
-        }else{
-            do
-            {
-                printf ( "Entrada invalida! Tente novamente\n\n" );
-
-                printf ( "Selecione o tipo de endereço\n" );
-                printf ( "1 - Travessa\n" );
-                printf ( "2 - Alameda\n" );
-                printf ( "3 - Avenida\n" );
-                printf ( "4 - Praça\n" );
-                printf ( "5 - Rua\n" );
-                fflush ( stdin );
-                scanf ( "%s", &pessoa[*qtdPessoa].tipoTelefone );
-            } while (pessoa[*qtdPessoa].tipoTelefone == '1' || pessoa[*qtdPessoa].tipoTelefone == '2' || pessoa[*qtdPessoa].tipoTelefone == '3' || pessoa[*qtdPessoa].tipoTelefone == '4' || pessoa[*qtdPessoa].tipoTelefone == '5');
-            
-        }
-
-        printf ( "Digite o endereco: ");
-        fflush ( stdin );
-        scanf ( "%[^\n]s", &pessoa[*qtdPessoa].endereco );
-}
-
-//Funções para limpar tela
-
+//Funcões para limpar tela
 void limparTela ( void )
 {
     #ifdef __linux__
