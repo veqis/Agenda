@@ -53,7 +53,7 @@ int main()
 
         case 2: editar ( pessoa, qtdPessoa ); break;
         
-        //case 3: consultar ( pessoa, qtdPessoa ); break;
+        case 3: consultar ( pessoa, qtdPessoa ); break;
 
         case 4: remover ( pessoa, &qtdPessoa ); break;
 
@@ -333,6 +333,24 @@ void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
     }
     (*qtdPessoa)--;
 
+}
+
+void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa )
+{
+    int entrada;
+    printf ( "Digite o id do contato: " );   
+    do
+    {
+        scanf ( "%i", &entrada );
+        entrada--;
+        if (entrada > qtdPessoa || entrada < 0)
+        {
+            printf ( "ID nao encontrado, tente novamente: " );
+        }
+        
+    } while (entrada > qtdPessoa || entrada < 0);
+
+        imprime ( pessoa, entrada, qtdPessoa );
 }
 
 char *obterNomeEndereco ( enum tipoEndereco tpEnd )
