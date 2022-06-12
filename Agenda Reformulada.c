@@ -23,9 +23,9 @@ typedef struct {
     enum tipoSocial tpSoci;
 } registro;
 
-char *obterNomeTelefone ( enum tipoEndereco tpCon );
-char *obterNomeEndereco ( enum tipoEndereco tpEnd );
-char *obterNomeSocial ( enum tipoEndereco tpSoci );
+char *obterNomeTelefone ( int tpCon );
+char *obterNomeEndereco ( int tpEnd );
+char *obterNomeSocial ( int tpSoci );
 void limparTela ( void );
 void aguardarParaSeguir ( void );
 
@@ -80,12 +80,12 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
         //FUNÇÂO QUE ESPECIFICA O TIPO DE ENDEREÇO
         printf ( "\nSelecione o tipo de endereco\n" );
-        printf ( "1 - Alameda\n" );
-        printf ( "2 - Avenida\n" );
-        printf ( "3 - Praca\n" );
-        printf ( "4 - Rua\n" );
-        printf ( "5 - Travessa\n" );
-        printf ( "6 - Rodovia\n" );
+        printf ( "0 - Alameda\n" );
+        printf ( "1 - Avenida\n" );
+        printf ( "2 - Praca\n" );
+        printf ( "3 - Rua\n" );
+        printf ( "4 - Travessa\n" );
+        printf ( "5 - Rodovia\n" );
         scanf ( "%i", &pessoa[*qtdPessoa].tpEnd );
 
         //FUNÇÂO PARA INSERIR O ENDERECO
@@ -98,11 +98,11 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         
         //FUNÇÂO QUE ESPECIFICA O TIPO DE TELEFONE
         printf ( "\nSelecione o tipo de telefone\n" );
-        printf ( "1 - Celular\n" );
-        printf ( "2 - Fixo\n" );
-        printf ( "3 - Comercial\n" );
-        printf ( "4 - Pessoal\n" );
-        printf ( "5 - Fax\n" );
+        printf ( "0 - Celular\n" );
+        printf ( "1 - Fixo\n" );
+        printf ( "2 - Comercial\n" );
+        printf ( "3 - Pessoal\n" );
+        printf ( "4 - Fax\n" );
         scanf ( "%i", &pessoa[*qtdPessoa].tpCon );
 
         //FUNÇÂO PARA INSERIR O NUMERO
@@ -112,10 +112,10 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
         //FUNÇÂO QUE ESPECIFICA O TIPO DE REDE SOCIAL
         printf ( "\nSelecione o tipo de rede social\n" );
-        printf ( "1 - Instagram\n" );
-        printf ( "2 - Facebook\n" );
-        printf ( "3 - LinkedIn\n" );
-        printf ( "4 - outro\n" );
+        printf ( "0 - Instagram\n" );
+        printf ( "1 - Facebook\n" );
+        printf ( "2 - LinkedIn\n" );
+        printf ( "3 - outro\n" );
         scanf ( "%i", &pessoa[*qtdPessoa].tpSoci );
 
         printf ( "\nDigite a rede social: ");
@@ -167,9 +167,9 @@ void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
     strncpy ( subNome , pessoa[i].nome, 15 );
     strncpy ( subEndereco  , pessoa[i].endereco, 20 );
 
-    sprintf ( subEndereco, "%s %s, %i", obterNomeEndereco ( pessoa[qtdPessoa].tpEnd ), pessoa[i].endereco, pessoa[i].numeroCasa);
-    sprintf ( subContato, "%s %s", obterNomeTelefone ( pessoa[qtdPessoa].tpCon ), pessoa[i].telefone );
-    sprintf ( subSocial, "%s %s", obterNomeSocial ( pessoa[qtdPessoa].tpSoci ), pessoa[i].redeSocial );
+    sprintf ( subEndereco, "%s %s, %i", obterNomeEndereco ( pessoa[i].tpEnd ), pessoa[i].endereco, pessoa[i].numeroCasa);
+    sprintf ( subContato, "%s %s", obterNomeTelefone ( pessoa[i].tpCon ), pessoa[i].telefone );
+    sprintf ( subSocial, "%s %s", obterNomeSocial ( pessoa[i].tpSoci ), pessoa[i].redeSocial );
 
     printf ( "| %i | %-15s | %-20s | %-15s | %-15s | %s |\n", pessoa[i].id, subNome, subEndereco, subContato, subSocial, pessoa[i].email );
     //          Id   Nome    Ende.   Tele.    R.S.   Email
@@ -237,12 +237,12 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
         break;
     case 2:
         printf ( "\nSelecione o novo tipo de endereco\n" );
-        printf ( "1 - Alameda\n" );
-        printf ( "2 - Avenida\n" );
-        printf ( "3 - Praca\n" );
-        printf ( "4 - Rua\n" );
-        printf ( "5 - Travessa\n" );
-        printf ( "6 - Rodovia\n" );
+        printf ( "0 - Alameda\n" );
+        printf ( "1 - Avenida\n" );
+        printf ( "2 - Praca\n" );
+        printf ( "3 - Rua\n" );
+        printf ( "4 - Travessa\n" );
+        printf ( "5 - Rodovia\n" );
         scanf ( "%i", &pessoa[entrada].tpEnd );
         break;
     case 3:
@@ -256,11 +256,11 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
         break;
     case 5:
         printf ( "\nSelecione o novo tipo de telefone\n" );
-        printf ( "1 - Celular\n" );
-        printf ( "2 - Fixo\n" );
-        printf ( "3 - Comercial\n" );
-        printf ( "4 - Pessoal\n" );
-        printf ( "5 - Fax\n" );
+        printf ( "0 - Celular\n" );
+        printf ( "1 - Fixo\n" );
+        printf ( "2 - Comercial\n" );
+        printf ( "3 - Pessoal\n" );
+        printf ( "4 - Fax\n" );
         scanf ( "%i", &pessoa[entrada].tpCon );  
         break;
     case 6:
@@ -270,10 +270,10 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
         break;
     case 7:
         printf ( "\nSelecione o tipo de rede social\n" );
-        printf ( "1 - Instagram\n" );
-        printf ( "2 - Facebook\n" );
-        printf ( "3 - LinkedIn\n" );
-        printf ( "4 - outro\n" );
+        printf ( "0 - Instagram\n" );
+        printf ( "1 - Facebook\n" );
+        printf ( "2 - LinkedIn\n" );
+        printf ( "3 - outro\n" );
         scanf ( "%i", &pessoa[entrada].tpSoci );
         break;
     case 8:
@@ -353,17 +353,17 @@ void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa )
         imprime ( pessoa, entrada, qtdPessoa );
 }
 
-char *obterNomeEndereco ( enum tipoEndereco tpEnd )
+char *obterNomeEndereco ( int tpEnd )
 {
     const char *nomeEndereco[] =
     {
-        "Al.", "Av.", "Pr.", "Rod.", "R.", "Tr."
+        "Al.", "Av.", "Pr.", "R.", "Tr.", "Rod."
     };
 
     return ( nomeEndereco [ tpEnd ] );
 }
 
-char *obterNomeTelefone ( enum tipoEndereco tpCon )
+char *obterNomeTelefone ( int tpCon )
 {
     const char *nomeTelefone[] =
     {
@@ -373,7 +373,7 @@ char *obterNomeTelefone ( enum tipoEndereco tpCon )
     return ( nomeTelefone [ tpCon ] );
 }
 
-char *obterNomeSocial ( enum tipoEndereco tpSoci )
+char *obterNomeSocial ( int tpSoci )
 {
     const char *nomeSocial[] =
     {
@@ -382,6 +382,14 @@ char *obterNomeSocial ( enum tipoEndereco tpSoci )
 
     return ( nomeSocial [ tpSoci ] );
 }
+
+/*void salvar (  )
+{
+    FILE *file;
+    file = fopen ( "teste.txt", "w" );
+    fprintf ( file,"teste" );
+    fclose ( file );
+}*/
 
 //Funcões para limpar tela
 void limparTela ( void )
