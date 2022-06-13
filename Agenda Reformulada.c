@@ -28,6 +28,12 @@ char *obterNomeEndereco ( int tpEnd );
 char *obterNomeSocial ( int tpSoci );
 void limparTela ( void );
 void aguardarParaSeguir ( void );
+void editar ( registro pessoa [ TAM_VET ], int qtdPessoa );
+void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa );
+void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa );
+void imprimeTodos ( registro pessoa [ TAM_VET ], int qtdPessoa );
+void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa );
+void salvar ( registro pessoa [ TAM_VET ], int qtdPessoa );
 
 int main()
 {
@@ -41,6 +47,7 @@ int main()
         printf ( "3 - Consutar contato\n");
         printf ( "4 - Remover contato\n" );
         printf ( "5 - Imprimir\n" );
+        printf ( "6 - Salvar\n" );
         printf ( "0 - Finalizar\n" );
         printf ( "Digite sua opcao: " );
         scanf  ( "%i", &menu );
@@ -58,6 +65,8 @@ int main()
         case 4: remover ( pessoa, &qtdPessoa ); break;
 
         case 5: imprimeTodos ( pessoa, qtdPessoa ); break;
+
+        case 6: salvar ( pessoa, qtdPessoa ); break;
 
         default: printf ( "Opcao invalida!\n" ); break;
         }
@@ -163,6 +172,7 @@ void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
     char subBairro [ 11 ];
     char subContato [ 21 ];
     char subSocial [ 21 ];
+    char *contato [ 100 ];
 
     strncpy ( subNome , pessoa[i].nome, 15 );
     strncpy ( subEndereco  , pessoa[i].endereco, 20 );
@@ -170,6 +180,8 @@ void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
     sprintf ( subEndereco, "%s %s, %i", obterNomeEndereco ( pessoa[i].tpEnd ), pessoa[i].endereco, pessoa[i].numeroCasa);
     sprintf ( subContato, "%s %s", obterNomeTelefone ( pessoa[i].tpCon ), pessoa[i].telefone );
     sprintf ( subSocial, "%s %s", obterNomeSocial ( pessoa[i].tpSoci ), pessoa[i].redeSocial );
+
+    
 
     printf ( "| %i | %-15s | %-20s | %-15s | %-15s | %s |\n", pessoa[i].id, subNome, subEndereco, subContato, subSocial, pessoa[i].email );
     //          Id   Nome    Ende.   Tele.    R.S.   Email
@@ -383,13 +395,31 @@ char *obterNomeSocial ( int tpSoci )
     return ( nomeSocial [ tpSoci ] );
 }
 
-/*void salvar (  )
+//Função que salva os contatos em um arquivo .csv
+void salvar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
-    FILE *file;
-    file = fopen ( "teste.txt", "w" );
-    fprintf ( file,"teste" );
-    fclose ( file );
-}*/
+    FILE *arquivo = NULL;
+    
+    arquivo = fopen("agenda.csv", "w");
+
+    if ( !arquivo )
+    {
+        printf ( "Nao foi possivel abrir o arquivo" );
+        return 0;
+    }
+      
+    for (int i = 0; i < qtdPessoa; i++)
+    {
+        fprintf ( arquivo, "%i ;", pessoa[i].id);
+        fprintf ( arquivo, " %s ;", pessoa[i].nome );
+        fprintf ( arquivo, " %s %s %i ;", obterNomeEndereco ( pessoa[i].tpEnd ), pessoa[i].endereco, pessoa[i].numeroCasa );
+        fprintf ( arquivo, " %s %s ;", obterNomeTelefone ( pessoa[i].tpCon ), pessoa[i].telefone );
+        fprintf ( arquivo, " %s %s ;", obterNomeSocial ( pessoa[i].tpSoci ), pessoa[i].redeSocial  );
+        fprintf ( arquivo, " %s\n", pessoa[i].email );
+    }
+    
+    fclose ( arquivo );
+}
 
 //Funcões para limpar tela
 void limparTela ( void )
