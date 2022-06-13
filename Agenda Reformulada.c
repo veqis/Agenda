@@ -34,6 +34,7 @@ void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa );
 void imprimeTodos ( registro pessoa [ TAM_VET ], int qtdPessoa );
 void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa );
 void salvar ( registro pessoa [ TAM_VET ], int qtdPessoa );
+void editarTelefone ( registro pessoa [ TAM_VET ], int qtdPessoa );
 
 int main()
 {
@@ -54,7 +55,10 @@ int main()
 
         switch (menu)
         {
-        case 0: break;
+        case 0: salvar ( pessoa, qtdPessoa );
+                printf ("Salvando contatos...");
+                sleep(1);
+        break;
 
         case 1: addPessoa ( pessoa, &qtdPessoa ); break;
 
@@ -67,6 +71,8 @@ int main()
         case 5: imprimeTodos ( pessoa, qtdPessoa ); break;
 
         case 6: salvar ( pessoa, qtdPessoa ); break;
+
+        case 7: editarTelefone ( pessoa, qtdPessoa ); break;
 
         default: printf ( "Opcao invalida!\n" ); break;
         }
@@ -178,13 +184,28 @@ void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
     strncpy ( subEndereco  , pessoa[i].endereco, 20 );
 
     sprintf ( subEndereco, "%s %s, %i", obterNomeEndereco ( pessoa[i].tpEnd ), pessoa[i].endereco, pessoa[i].numeroCasa);
-    sprintf ( subContato, "%s %s", obterNomeTelefone ( pessoa[i].tpCon ), pessoa[i].telefone );
+    sprintf ( subContato, "%s ", obterNomeTelefone ( pessoa[i].tpCon ) );
     sprintf ( subSocial, "%s %s", obterNomeSocial ( pessoa[i].tpSoci ), pessoa[i].redeSocial );
-
-    
 
     printf ( "| %i | %-15s | %-20s | %-15s | %-15s | %s |\n", pessoa[i].id, subNome, subEndereco, subContato, subSocial, pessoa[i].email );
     //          Id   Nome    Ende.   Tele.    R.S.   Email
+}
+
+void editarTelefone ( registro pessoa [ TAM_VET ], int qtdPessoa )
+{
+    //Funcão que pega o numero de telefone e separa o ddd e cloca a barra entre os numeros
+    char DDD[3], parte1[6], parte2[6], telefone[20];
+
+    strncpy ( DDD, &pessoa [ qtdPessoa ].telefone [ 0 ], 2 );
+    strncpy ( parte1, &pessoa [ qtdPessoa ].telefone [ 2 ], 5 );
+    strncpy ( parte2, &pessoa [ qtdPessoa ].telefone [ 7 ], 5 );
+    DDD [2] = parte1 [5] = parte2 [5] = '\0';
+
+    sprintf ( pessoa[qtdPessoa].telefone, "(%s) %s-%s", DDD, parte1, parte2 );
+
+    //strncpy ( pessoa[qtdPessoa].telefone, telefone, 20 );
+
+    printf ( "%s", pessoa[qtdPessoa].telefone);
 }
 
 void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
@@ -389,32 +410,34 @@ char *obterNomeSocial ( int tpSoci )
 {
     const char *nomeSocial[] =
     {
-        "Ins.", "Face.", "Lin.", ""
+        "Ins.", "Fac.", "Lin.", ""
     };
 
     return ( nomeSocial [ tpSoci ] );
 }
 
-//Função que salva os contatos em um arquivo .csv
+//Função que salva os contatos em um arquivo .csv de modo tabulado
 void salvar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
     FILE *arquivo = NULL;
     
     arquivo = fopen("agenda.csv", "w");
 
+    //verifica o arquivo e caso detecte erro fecha o programa
     if ( !arquivo )
     {
         printf ( "Nao foi possivel abrir o arquivo" );
         return 0;
     }
-      
+    
+    //loop de impressão
     for (int i = 0; i < qtdPessoa; i++)
     {
         fprintf ( arquivo, "%i ;", pessoa[i].id);
-        fprintf ( arquivo, " %s ;", pessoa[i].nome );
-        fprintf ( arquivo, " %s %s %i ;", obterNomeEndereco ( pessoa[i].tpEnd ), pessoa[i].endereco, pessoa[i].numeroCasa );
-        fprintf ( arquivo, " %s %s ;", obterNomeTelefone ( pessoa[i].tpCon ), pessoa[i].telefone );
-        fprintf ( arquivo, " %s %s ;", obterNomeSocial ( pessoa[i].tpSoci ), pessoa[i].redeSocial  );
+        fprintf ( arquivo, " %-15s ;", pessoa[i].nome );
+        fprintf ( arquivo, " %-3s %-12s %-5i ;", obterNomeEndereco ( pessoa[i].tpEnd ), pessoa[i].endereco, pessoa[i].numeroCasa );
+        fprintf ( arquivo, " %-4s %-11s ;", obterNomeTelefone ( pessoa[i].tpCon ), pessoa[i].telefone );
+        fprintf ( arquivo, " %-4s %-11s ;", obterNomeSocial ( pessoa[i].tpSoci ), pessoa[i].redeSocial  );
         fprintf ( arquivo, " %s\n", pessoa[i].email );
     }
     
