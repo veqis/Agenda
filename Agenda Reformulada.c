@@ -34,6 +34,7 @@ void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa );
 void imprimeTodos ( registro pessoa [ TAM_VET ], int qtdPessoa );
 void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa );
 void salvar ( registro pessoa [ TAM_VET ], int qtdPessoa );
+void capitalizaNomes( registro pessoa [ TAM_VET ], int qtdPessoa ) ;
 void editarTelefone ( registro pessoa [ TAM_VET ], int qtdPessoa );
 
 int main()
@@ -47,7 +48,7 @@ int main()
         printf ( "2 - Editar contato\n" );
         printf ( "3 - Consutar contato\n");
         printf ( "4 - Remover contato\n" );
-        printf ( "5 - Imprimir\n" );
+        printf ( "5 - Listar contatos\n" );
         printf ( "6 - Salvar\n" );
         printf ( "0 - Finalizar\n" );
         printf ( "Digite sua opcao: " );
@@ -55,9 +56,8 @@ int main()
 
         switch (menu)
         {
-        case 0: salvar ( pessoa, qtdPessoa );
-                printf ("Salvando contatos...");
-                sleep(1);
+        case 0: printf ("Salvando contatos...");
+                salvar ( pessoa, qtdPessoa );
         break;
 
         case 1: addPessoa ( pessoa, &qtdPessoa ); break;
@@ -71,8 +71,6 @@ int main()
         case 5: imprimeTodos ( pessoa, qtdPessoa ); break;
 
         case 6: salvar ( pessoa, qtdPessoa ); break;
-
-        case 7: editarTelefone ( pessoa, qtdPessoa ); break;
 
         default: printf ( "Opcao invalida!\n" ); break;
         }
@@ -173,6 +171,8 @@ void imprimeTodos ( registro pessoa [ TAM_VET ], int qtdPessoa )
 
 void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
 {
+    editarTelefone ( pessoa, i );
+    capitalizaNomes ( pessoa, i);
     char subNome [ 16 ];
     char subEndereco  [ 21 ];
     char subBairro [ 11 ];
@@ -184,7 +184,7 @@ void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
     strncpy ( subEndereco  , pessoa[i].endereco, 20 );
 
     sprintf ( subEndereco, "%s %s, %i", obterNomeEndereco ( pessoa[i].tpEnd ), pessoa[i].endereco, pessoa[i].numeroCasa);
-    sprintf ( subContato, "%s ", obterNomeTelefone ( pessoa[i].tpCon ) );
+    sprintf ( subContato, "%s %s", obterNomeTelefone ( pessoa[i].tpCon ), pessoa[i].telefone );
     sprintf ( subSocial, "%s %s", obterNomeSocial ( pessoa[i].tpSoci ), pessoa[i].redeSocial );
 
     printf ( "| %i | %-15s | %-20s | %-15s | %-15s | %s |\n", pessoa[i].id, subNome, subEndereco, subContato, subSocial, pessoa[i].email );
@@ -201,11 +201,9 @@ void editarTelefone ( registro pessoa [ TAM_VET ], int qtdPessoa )
     strncpy ( parte2, &pessoa [ qtdPessoa ].telefone [ 7 ], 5 );
     DDD [2] = parte1 [5] = parte2 [5] = '\0';
 
-    sprintf ( pessoa[qtdPessoa].telefone, "(%s) %s-%s", DDD, parte1, parte2 );
+    sprintf ( telefone, "(%s) %s-%s", DDD, parte1, parte2 );
 
-    //strncpy ( pessoa[qtdPessoa].telefone, telefone, 20 );
-
-    printf ( "%s", pessoa[qtdPessoa].telefone);
+    strncpy ( pessoa[qtdPessoa].telefone, telefone, 20 );
 }
 
 void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
@@ -386,6 +384,7 @@ void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa )
         imprime ( pessoa, entrada, qtdPessoa );
 }
 
+//Funções que pegam o valor em int selecionado e inserem a string do struct
 char *obterNomeEndereco ( int tpEnd )
 {
     const char *nomeEndereco[] =
@@ -442,6 +441,24 @@ void salvar ( registro pessoa [ TAM_VET ], int qtdPessoa )
     }
     
     fclose ( arquivo );
+}
+
+void capitalizaNomes( registro pessoa [ TAM_VET ], int qtdPessoa ) 
+{
+  for(int i = 0; i < TAM_NOME; i++)
+  {
+    //capitalizar primeiro nome
+    if(i==0) 
+    {
+      pessoa[qtdPessoa].nome [ i ] = toupper ( pessoa[qtdPessoa].nome [ i ] );
+    }
+
+    //capitalizar nomes que antecedem espaço
+    if( pessoa[qtdPessoa].nome [i] == ' ') 
+    {
+      pessoa[qtdPessoa].nome [ i + 1 ] = toupper ( pessoa[qtdPessoa].nome [ i + 1 ] );
+    }
+  }
 }
 
 //Funcões para limpar tela
