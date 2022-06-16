@@ -130,7 +130,7 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         //FUNÇÂO PARA INSERIR O NUMERO
         printf ( "\nDigite o numero de telefone: ");
         fflush ( stdin );
-        scanf ( "%s", &pessoa[*qtdPessoa].telefone );
+        scanf ( "%[^\n]s", &pessoa[*qtdPessoa].telefone );
 
         //FUNÇÂO QUE ESPECIFICA O TIPO DE REDE SOCIAL
         printf ( "\nSelecione o tipo de rede social\n" );
@@ -142,12 +142,12 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
         printf ( "\nDigite a rede social: ");
         fflush ( stdin );
-        scanf ( "%s", &pessoa[*qtdPessoa].redeSocial );
+        scanf ( "%[^\n]s", &pessoa[*qtdPessoa].redeSocial );
 
         //FUNÇÂO PARA INSERIR EMAIL
         printf ( "Digite o e-mail ");
         fflush ( stdin );
-        scanf ( "%s", &pessoa[*qtdPessoa].email );
+        scanf ( "%[^\n]s", &pessoa[*qtdPessoa].email );
 
         pessoa[*qtdPessoa].id = *qtdPessoa + 1;
         *qtdPessoa+=1;
