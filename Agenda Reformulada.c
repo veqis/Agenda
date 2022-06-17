@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define TAM_NOME 200
-#define TAM_VET 50
+#define TAM_VET 30
 
 enum tipoEndereco { Alameda, Avenida, Praca, Rua, Travessa };
 enum tipoContato { Celular, Fixo, Comercial, Pessoal, Fax };
@@ -271,147 +271,161 @@ void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
 
 void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
-    int entrada, menu;
+    int menu;
     char continua;
+    char busca [50];
+    int achou = 0;
 
-    //Filtragem de entrada
-    printf ( "Digite o id do contato a editar: " );   
-    do
+    printf("Insira o nome do contato: ");
+    fflush(stdin);
+    gets( busca );
+
+    for (int i = 0; i < qtdPessoa; i++)
     {
-        scanf ( "%i", &entrada );
-        entrada--;
-        if (entrada > qtdPessoa || entrada < 0)
+        if( strcmp ( busca, pessoa[i].nome )==0)
         {
-            printf ( "ID nao encontrado, tente novamente: " );
+            imprime ( pessoa, i, qtdPessoa );
+            
+            achou = 1;
+            
+            
+            //Filtragem de entrada  
+            printf("Deseja alterar o contato selecionado? (S/N): ");
+            do
+            {
+                fflush ( stdin );
+                continua = tolower ( getchar () );
+                if (continua != 'n' && continua != 's')
+                {
+                    printf( "Entrada invalida, tente novamente: " );
+                }else if ( continua == 'n' )
+                {
+                    printf( "Edicao cancelada!" );
+                    return 0;
+                }
+                
+            } while ( continua != 'n' && continua != 's' );
+
+           
+            //edicão do contato
+            printf ( "Selecione o campo a editar: \n" );
+            printf ( "1 - Nome\n" );
+            printf ( "2 - Tipo endereco\n" );
+            printf ( "3 - Endereco\n");
+            printf ( "4 - Numero\n" );
+            printf ( "5 - Tipo telefone\n" );
+            printf ( "6 - Telefone\n" );
+            printf ( "7 - Tipo social\n" );
+            printf ( "8 - Rede social\n" );
+            printf ( "9 - E-mail\n" );
+            printf ( "Digite sua opcao: " );
+            scanf  ( "%i", &menu );
+
+            switch (menu)
+            {
+            case 1: lerNome ( pessoa, i ); break;
+
+            case 2: menuEnd ( pessoa, i ); break;
+
+            case 3: lerEnd ( pessoa, i ); break;
+
+            case 4: lerNumCasa ( pessoa, i ); break;
+
+            case 5: menuCon ( pessoa, i ); break;
+
+            case 6: lerCon ( pessoa, i );
+                    pessoa[ i ].editado = 0;
+                    break;
+
+            case 7: menuSoci ( pessoa, i ); break;
+
+            case 8: lerSoci ( pessoa, i ); break;
+
+            case 9: lerEmail( pessoa, i ); break;
+
+            default: printf ( "Opcao invalida!\n" ); break;
+            }
         }
-        
-    } while (entrada > qtdPessoa || entrada < 0);
-
-    //Impressão do contato
-    imprime ( pessoa, entrada, qtdPessoa );
-    
-    printf("Deseja alterar o contato selecionado? (S/N): ");
-    //Filtragem de entrada       
-    do
+    }
+    if (achou == 0)
     {
-        fflush ( stdin );
-        continua = tolower ( getchar () );
-        if (continua != 'n' && continua != 's')
-        {
-            printf( "Entrada invalida, tente novamente: " );
-        }else if ( continua == 'n' )
-        {
-            printf( "Edicao cancelada!" );
-            return 0;
-        }
-        
-    } while ( continua != 'n' && continua != 's' );
-
-    //edicão do contato
-    printf ( "Selecione o campo a editar: \n" );
-    printf ( "1 - Nome\n" );
-    printf ( "2 - Tipo endereco\n" );
-    printf ( "3 - Endereco\n");
-    printf ( "4 - Numero\n" );
-    printf ( "5 - Tipo telefone\n" );
-    printf ( "6 - Telefone\n" );
-    printf ( "7 - Tipo social\n" );
-    printf ( "8 - Rede social\n" );
-    printf ( "9 - E-mail\n" );
-    printf ( "Digite sua opcao: " );
-    scanf  ( "%i", &menu );
-
-    switch (menu)
-    {
-    case 1: lerNome ( pessoa, entrada ); break;
-
-    case 2: menuEnd ( pessoa, entrada ); break;
-
-    case 3: lerEnd ( pessoa, entrada ); break;
-
-    case 4: lerNumCasa ( pessoa, entrada ); break;
-
-    case 5: menuCon ( pessoa, entrada ); break;
-
-    case 6: lerCon ( pessoa, entrada );
-            pessoa[ entrada ].editado = 0;
-            break;
-
-    case 7: menuSoci ( pessoa, entrada ); break;
-
-    case 8: lerSoci ( pessoa, entrada ); break;
-
-    case 9: lerEmail( pessoa, entrada ); break;
-
-    default: printf ( "Opcao invalida!\n" ); break;
+        printf("Contato nao encontrado");
     }
 }
 
 void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 {
-    int entrada;
+    char busca [50];
+    int achou = 0;
     char continua;
 
-    //Filtragem de entrada e exibicão de contato
-    printf ( "Digite o id do contato a ser removido: " );
-    do
-    {
-        scanf ( "%i", &entrada );
-        entrada--;
-        if (entrada > *qtdPessoa || entrada < 0)
-        {
-            printf ( "ID nao encontrado, tente novamente: " );
-        }        
-    } while (entrada > *qtdPessoa || entrada < 0);
+    printf("Insira o nome do contato: ");
+    fflush(stdin);
+    gets( busca );
 
-    imprime ( pessoa, entrada, *qtdPessoa );
- 
-    //Filtragem de entrada 
-    printf("Deseja deletar o contato selecionado? (S/N): ");      
-    do
+    for (int i = 0; i < *qtdPessoa; i++)
     {
-        fflush ( stdin );
-        continua = tolower ( getchar () );
-        if (continua != 'n' && continua != 's')
+        if( strcmp ( busca, pessoa[i].nome )==0)
         {
-            printf( "Entrada invalida, tente novamente: " );
-        }else if ( continua == 'n' )
-        {
-            printf( "Remocao cancelada!" );
-            return 0;
+            imprime ( pessoa, i, *qtdPessoa );
+
+            achou = 1;
+
+            //Filtragem de entrada 
+            printf("Deseja deletar o contato selecionado? (S/N): ");      
+            do
+            {
+                fflush ( stdin );
+                continua = tolower ( getchar () );
+
+                if (continua != 'n' && continua != 's')
+                {
+                    printf( "Entrada invalida, tente novamente: " );
+
+                }else if ( continua == 'n' )
+                {
+                    printf( "Remocao cancelada!" );
+                    return 0;
+                }
+                
+            } while ( continua != 'n' && continua != 's' );
+
+            //Realocacão de posicões e remocão de contato
+            for ( int j = i; j <= *qtdPessoa; j++ )
+            {
+                pessoa[ j ] = pessoa[ j + 1 ];
+            }
+
+            (*qtdPessoa)--;
         }
-        
-    } while ( continua != 'n' && continua != 's' );
-
-    //Realocacão de posicões e remocão de contato
-    for ( int i = entrada; i <= *qtdPessoa; i++ )
-    {
-        pessoa[ i ] = pessoa[ i + 1 ];
     }
-    (*qtdPessoa)--;
-
+    if (achou == 0)
+    {
+        printf("Contato nao encontrado");
+    }
 }
 
 void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
-    char busca[ TAM_VET ];
+    char busca [50];
     int achou = 0;
 
     printf("Insira o nome do contato: ");
     fflush(stdin);
-    scanf  ( "%[^\n]", &busca );
+    gets( busca );
 
     for (int i = 0; i < qtdPessoa; i++)
     {
-        if( strcmp ( busca, pessoa[i].nome ) == 0)
+        if( strcmp ( busca, pessoa[i].nome )==0)
         {
             imprime ( pessoa, i, qtdPessoa );
+            
             achou = 1;
         }
     }
     if (achou == 0)
     {
-        printf("Contato não encontrado");
+        printf("Contato nao encontrado");
     }
 
 }
