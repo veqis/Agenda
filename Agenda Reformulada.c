@@ -25,13 +25,7 @@ typedef struct agenda {
     enum tipoSocial tpSoci;
 } registro;
 
-char *obterNomeTelefone ( int tpCon );
-char *obterNomeEndereco ( int tpEnd );
-char *obterNomeSocial ( int tpSoci );
 
-void limparTela ( void );
-void aguardarParaSeguir ( void );
-void verificaArquivo ( void );
 
 //FUNÇÕES PARA ADIÇÃO DE CONTATO
 void lerNome ( registro pessoa [ TAM_VET ], int qtdPessoa );
@@ -47,9 +41,12 @@ void lerEmail( registro pessoa [ TAM_VET ], int qtdPessoa );
 //FUNÇÕES PARA EDIÇÃO DE DADOS DENTRO DA STRUCT
 void capitalizaNomes( registro pessoa [ TAM_VET ], int qtdPessoa ) ;
 void editarTelefone ( registro pessoa [ TAM_VET ], int qtdPessoa );
-void editarEnums ( registro pessoa [ TAM_VET ], int qtdPessoa );
 void ordenarNomes ( registro pessoa [ TAM_VET ], int qtdPessoa );
-int verificaEmail( registro pessoa [ TAM_VET ], int qtdPessoa );
+void verificaEmail( registro pessoa [ TAM_VET ], int qtdPessoa );
+void editarEnums ( registro pessoa [ TAM_VET ], int qtdPessoa );
+char *obterNomeTelefone ( int tpCon );
+char *obterNomeEndereco ( int tpEnd );
+char *obterNomeSocial ( int tpSoci );
 
 //FUNÇÕES DO MENU
 void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa );
@@ -59,17 +56,21 @@ void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa );
 void imprimeTodos ( registro pessoa [ TAM_VET ], int qtdPessoa );
 void salvar ( registro pessoa [ TAM_VET ], int qtdPessoa );
 void carregarDados ( registro pessoa [ TAM_VET ], int *qtdPessoa );
+void limparTela ( void );
+void aguardarParaSeguir ( void );
+void verificaArquivo ();
 
 
 int main()
 {
     registro pessoa [ TAM_VET ];
+
     int menu, qtdPessoa = 0;
-    void verificaArquivo ();
+
+    verificaArquivo ();
+
     carregarDados ( pessoa, &qtdPessoa );
     
-    
-
     do
     {
         printf ( "     AGENDA\n" );
@@ -89,26 +90,25 @@ int main()
                 salvar ( pessoa, qtdPessoa );
         break;
 
-        case 1: addPessoa ( pessoa, &qtdPessoa );
-                salvar ( pessoa, qtdPessoa );
+        case 1: addPessoa ( pessoa, &qtdPessoa ); 
+                ordenarNomes ( pessoa, qtdPessoa );
         break;
 
-        case 2: editar ( pessoa, qtdPessoa );
-                salvar ( pessoa, qtdPessoa );
-        break;
+        case 2: editar ( pessoa, qtdPessoa ); break;
         
         case 3: consultar ( pessoa, qtdPessoa ); break;
 
-        case 4: remover ( pessoa, &qtdPessoa ); 
-                salvar ( pessoa, qtdPessoa );
-        break;
+        case 4: remover ( pessoa, &qtdPessoa ); break;
 
         case 5: imprimeTodos ( pessoa, qtdPessoa ); break;
 
         case 6: salvar ( pessoa, qtdPessoa ); break;
 
+        //case 7: editarTelefone ( pessoa, qtdPessoa ); break;
+
         default: printf ( "Opcao invalida!\n" ); break;
         }
+
         //funcão de limpar tela.
         aguardarParaSeguir ();
     } 
@@ -121,6 +121,8 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
     char continua;
     do
     {
+        pessoa [ *qtdPessoa ].editado = 0;
+
         lerNome ( pessoa, *qtdPessoa );   
 
         menuEnd ( pessoa, *qtdPessoa );
@@ -138,6 +140,12 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
         lerSoci ( pessoa, *qtdPessoa );
 
         lerEmail( pessoa, *qtdPessoa );
+
+        editarTelefone ( pessoa, *qtdPessoa );
+
+        capitalizaNomes ( pessoa, *qtdPessoa );
+
+        editarEnums ( pessoa, *qtdPessoa );
 
         *qtdPessoa+=1;
 
@@ -239,27 +247,21 @@ void lerEmail ( registro pessoa [ TAM_VET ], int qtdPessoa )
 //
 void imprimeTodos ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
-
     for (int i = 0; i < qtdPessoa; i++)
     {
-        imprime ( pessoa, i, qtdPessoa );
+       imprime ( pessoa, i, qtdPessoa );  
     }
 }
 
 void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
 {
-    editarTelefone ( pessoa, i );
-    capitalizaNomes ( pessoa, i);
-    editarEnums ( pessoa, i );
-    ordenarNomes ( pessoa, qtdPessoa );
-
     char subContato [ 21 ];
     char subSocial [ 21 ];
 
     sprintf ( subContato, "%s %s", pessoa[i].verCon, pessoa[i].telefone );
     sprintf ( subSocial, "%s %s", pessoa[i].verSoci, pessoa[i].redeSocial );
 
-    printf ( "| %-15s | %s %-15s %i | %-15s | %-15s | %s |\n", 
+    printf ( "| %-15s | %s %-15s %-6i | %-20s | %-20s | %-15s |\n", 
     pessoa[i].nome, 
     pessoa[i].verEnd, 
     pessoa[i].endereco, 
@@ -446,16 +448,14 @@ void salvar ( registro pessoa [ TAM_VET ], int qtdPessoa )
     //loop de impressão
     for (int i = 0; i < qtdPessoa; i++)
     {
-        fprintf ( arquivo, " %-15s ;", pessoa[i].nome );
-        fprintf ( arquivo, " %-3s %-12s ; %-5i ;", obterNomeEndereco ( pessoa[i].tpEnd ), pessoa[i].endereco, pessoa[i].numeroCasa );
-        fprintf ( arquivo, " %-4s %-11s ;", obterNomeTelefone ( pessoa[i].tpCon ), pessoa[i].telefone );
-        fprintf ( arquivo, " %-4s %-11s ;", obterNomeSocial ( pessoa[i].tpSoci ), pessoa[i].redeSocial  );
-        fprintf ( arquivo, " %s;\n", pessoa[i].email );
+        fprintf ( arquivo, "%s;", pessoa[i].nome );
+        fprintf ( arquivo, "%s %s;%i;", pessoa[i].verEnd, pessoa[i].endereco, pessoa[i].numeroCasa );
+        fprintf ( arquivo, "%s %s;", pessoa[i].verCon, pessoa[i].telefone );
+        fprintf ( arquivo, "%s %s;", pessoa[i].verSoci, pessoa[i].redeSocial  );
+        fprintf ( arquivo, "%s;\n", pessoa[i].email );
     }
     
     fclose ( arquivo );
-
-    ordenarNomes ( pessoa, qtdPessoa );
 }
 
 void carregarDados ( registro pessoa [ TAM_VET ], int *qtdPessoa )
@@ -463,17 +463,11 @@ void carregarDados ( registro pessoa [ TAM_VET ], int *qtdPessoa )
   FILE *arquivo;
   arquivo = fopen("agenda.csv", "r");
 
-  if ( arquivo == NULL)
-  {
-    printf("ERRO!!!\n");
-    return 1;
-  }
-
   int lidos = 0;
 
   do
   {
-    lidos = fscanf ( arquivo," %49[^;]; %s %49[^;]; %i ; %s %49[^;]; %s %49[^;]; %49[^;];", 
+    lidos = fscanf ( arquivo," %49[^;];%s %49[^;];%i;%s %49[^;];%s %49[^;];%49[^;];", 
     pessoa[*qtdPessoa].nome,
     pessoa[*qtdPessoa].verEnd,
     pessoa[*qtdPessoa].endereco,
@@ -485,36 +479,37 @@ void carregarDados ( registro pessoa [ TAM_VET ], int *qtdPessoa )
     pessoa[*qtdPessoa].email);
 
     pessoa[*qtdPessoa].editado = 1;
+
     if ( lidos == 9 )
     {
       *qtdPessoa+=1;
     }
-    if ( lidos != 9 && !feof(arquivo))
+    if ( lidos != 9 && !feof(arquivo) )
     {
       printf ( "ERRO!!!\n" );
       return 1;
     }
 
-  } while (!feof(arquivo));
+  } while ( !feof(arquivo) );
 
   fclose(arquivo);
 }
 
-void verificaArquivo ( void )
+void verificaArquivo ()
 {
-    //ESSA FUNÇÃO VERIFICA SE JÁ EXISTE
-    //UM ARQUIVO DE AGENDA E CASO NÃO
-    //ELA PREVENTE QUE OCORRA ERRO AO ABRIR O PROGRMA
-
     FILE *arquivo;
-
-    if ( !arquivo )
+    
+    if (arquivo = fopen("agenda.csv", "r")) 
+    {
+        fclose(arquivo);
+    }
+    else
     {
         arquivo = fopen ( "agenda.csv", "w" );
         fclose ( arquivo );
     }
+    
 }
-
 
 //FUNÇÕES QUE PEGAM O VALOR EM INT SELECIONADO DURANTE A CRIAÇÃO DE CONTATO
 //E INSEREM A STRING SELECIONADA DENTRO DE UMA STRUCT
@@ -583,14 +578,15 @@ void ordenarNomes ( registro pessoa [ TAM_VET ], int qtdPessoa )
     //ESSA FUNÇÃO PEGA OS NOMES DE CADA CONTATO
     //E ORGANIZA TODOS POR ORDEM ALFABETICA
     //LEVANDO TODOS OS DADOS DO CONTATO JUNTOS
-
+    
     struct agenda temp;
 
     for (int i = 0; i < qtdPessoa; i++)
     {
+        
         for (int j = i + 1; j < qtdPessoa; j++)
         {
-        if (strcmp(pessoa[i].nome, pessoa[j].nome)>0) 
+        if (strcmp (pessoa[i].nome, pessoa[j].nome) > 0) 
         {
             temp = pessoa[i];
             pessoa[i] = pessoa[j];
@@ -600,7 +596,7 @@ void ordenarNomes ( registro pessoa [ TAM_VET ], int qtdPessoa )
     }
 }
 
-int verificaEmail ( registro pessoa [ TAM_VET ], int qtdPessoa )
+void verificaEmail ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
     char vrArr[] = "@";
     char vrPnt[] = ".";
@@ -641,24 +637,28 @@ void editarTelefone ( registro pessoa [ TAM_VET ], int qtdPessoa )
     // 1 = CONTATO JÀ EDITADO ; 0 = CONTATO NÂO EDITADO
     char DDD[3], parte1[6], parte2[6], telefone[20];
 
-    strncpy ( DDD, &pessoa [ qtdPessoa ].telefone [ 0 ], 2 );
-    strncpy ( parte1, &pessoa [ qtdPessoa ].telefone [ 2 ], 5 );
-    strncpy ( parte2, &pessoa [ qtdPessoa ].telefone [ 7 ], 5 );
-    DDD [2] = parte1 [5] = parte2 [5] = '\0';
-
     if ( pessoa[ qtdPessoa ].editado == 1  )
     {
         return 0;
     }
     else
     {
+        strncpy ( DDD, &pessoa [ qtdPessoa ].telefone [ 0 ], 2 );
+        strncpy ( parte1, &pessoa [ qtdPessoa ].telefone [ 2 ], 5 );
+        strncpy ( parte2, &pessoa [ qtdPessoa ].telefone [ 7 ], 5 );
+
+        DDD [2] = parte1 [5] = parte2 [5] = '\0';
+
+        sprintf ( telefone, "(%s)%s-%s", DDD, parte1, parte2 );
+
+        strncpy ( pessoa[qtdPessoa].telefone, telefone, 14 );
+
         pessoa[ qtdPessoa ].editado = 1;
     }
 
-    sprintf ( telefone, "(%s)%s-%s", DDD, parte1, parte2 );
 
-    strncpy ( pessoa[qtdPessoa].telefone, telefone, 15 );
 }
+
 
 
 //ESSAS DUAS FUNÇÕES SERVEM PARA LIMPAR
