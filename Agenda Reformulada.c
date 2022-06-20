@@ -67,6 +67,7 @@ int main()
 
     int menu, qtdPessoa = 0;
 
+    //ESSA FUNÇÃO VERIFICA SE O ARQUIVO DE AGENDA EXISTE PARA EVITAR ERRO DURANTE UMA PRIMEIRA EXECUÇÃO
     verificaArquivo ();
 
     carregarDados ( pessoa, &qtdPessoa );
@@ -104,12 +105,10 @@ int main()
 
         case 6: salvar ( pessoa, qtdPessoa ); break;
 
-        //case 7: editarTelefone ( pessoa, qtdPessoa ); break;
-
         default: printf ( "Opcao invalida!\n" ); break;
         }
 
-        //funcão de limpar tela.
+        //FUNÇÃO DE LIMPAR TELA
         aguardarParaSeguir ();
     } 
     while (menu != 0);
@@ -149,7 +148,7 @@ void addPessoa ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
         *qtdPessoa+=1;
 
-        //Filtragem de entrada 
+        //FILTRO DE ENTRADA 
         printf( "\nDeseja inserir mais uma pessoa? (S/N)\n" );       
         do
         {
@@ -247,6 +246,7 @@ void lerEmail ( registro pessoa [ TAM_VET ], int qtdPessoa )
 //
 void imprimeTodos ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
+    //FUNÇÃO QUE IMPRIME TODAS AS PESSOAS
     for (int i = 0; i < qtdPessoa; i++)
     {
        imprime ( pessoa, i, qtdPessoa );  
@@ -273,6 +273,8 @@ void imprime ( registro pessoa [ TAM_VET ], int i, int qtdPessoa )
 
 void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
+    //FUNÇÃO DE EDITAR CONTATOS
+
     int menu;
     char continua;
     char busca [50];
@@ -291,7 +293,7 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
             achou = 1;
             
             
-            //Filtragem de entrada  
+            //FILTRO DE ENTRADA 
             printf("Deseja alterar o contato selecionado? (S/N): ");
             do
             {
@@ -309,7 +311,7 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
             } while ( continua != 'n' && continua != 's' );
 
            
-            //edicão do contato
+            //MENU DE EDIÇÃO
             printf ( "Selecione o campo a editar: \n" );
             printf ( "1 - Nome\n" );
             printf ( "2 - Tipo endereco\n" );
@@ -357,6 +359,7 @@ void editar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 
 void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 {
+    //FUNÇÃO PARA REMOVER CONTATOS
     char busca [50];
     int achou = 0;
     char continua;
@@ -373,7 +376,7 @@ void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
             achou = 1;
 
-            //Filtragem de entrada 
+            //FILTRAGEM DE ENTRADA E VERIFICASÃO CAJO HAJA ERRO DE SELEÇÃO
             printf("Deseja deletar o contato selecionado? (S/N): ");      
             do
             {
@@ -392,7 +395,7 @@ void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
                 
             } while ( continua != 'n' && continua != 's' );
 
-            //Realocacão de posicões e remocão de contato
+            //REMOÇÃO DO CONTATO E REALOCAÇÃO DE POSIÇÕES
             for ( int j = i; j <= *qtdPessoa; j++ )
             {
                 pessoa[ j ] = pessoa[ j + 1 ];
@@ -409,6 +412,9 @@ void remover ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
 void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
+    //FUNÇÃO QUE BUSCA UM CONTATO ESPECIFICO PELO NOME
+    //CASO HAJA MAIS DE UM CONTATO COM O MESMO NOME SÃO IMPRESSOS AMBOS
+
     char busca [50];
     int achou = 0;
 
@@ -434,18 +440,18 @@ void consultar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 
 void salvar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
+    //FUNÇÃO QUE SALVA TODOS OS CONTATOS INSERIDOS NO ARQUIVO DE AGENDA
     FILE *arquivo = NULL;
     
     arquivo = fopen ( "agenda.csv", "w" );
 
-    //verifica o arquivo e caso detecte erro fecha o programa
     if ( !arquivo )
     {
         printf ( "Nao foi possivel abrir o arquivo" );
         return 0;
     }
     
-    //loop de impressão
+    //LOOP QUE SEGUE POR TODOS OS DADOS DO CONTATO
     for (int i = 0; i < qtdPessoa; i++)
     {
         fprintf ( arquivo, "%s;", pessoa[i].nome );
@@ -460,6 +466,8 @@ void salvar ( registro pessoa [ TAM_VET ], int qtdPessoa )
 
 void carregarDados ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 {
+    //FUNÇÃO DE LEITURA DO ARQUIVO DE AGENDA
+
   FILE *arquivo;
   arquivo = fopen("agenda.csv", "r");
 
@@ -497,6 +505,9 @@ void carregarDados ( registro pessoa [ TAM_VET ], int *qtdPessoa )
 
 void verificaArquivo ()
 {
+    //ESSA FUNÇÃO VERIFICA SE JÁ EXISTE UM ARQUICO DE AGENDA
+    //CASO NÃO EXISTA ESSE ARQUIVO ELE CRIA UM PARA EVITAR QUE HAJA ERRO
+
     FILE *arquivo;
     
     if (arquivo = fopen("agenda.csv", "r")) 
@@ -511,7 +522,7 @@ void verificaArquivo ()
     
 }
 
-//FUNÇÕES QUE PEGAM O VALOR EM INT SELECIONADO DURANTE A CRIAÇÃO DE CONTATO
+//ESSAS 3 FUNÇÕES PEGAM O VALOR EM INT SELECIONADO DURANTE A CRIAÇÃO DE CONTATO
 //E INSEREM A STRING SELECIONADA DENTRO DE UMA STRUCT
 char *obterNomeEndereco ( int tpEnd )
 {
@@ -545,6 +556,9 @@ char *obterNomeSocial ( int tpSoci )
 
 void editarEnums ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
+    //ESSA FUNÇÃO PEGA O OUTPUT DAS ANTERIORES E COLOCA DENTRO DE UMA PARTE DO STRUCT
+    //ISSO FACILITA A MANUPULAÇÃO DE DADOS QUANDO O ARQUIVO É SALVO E LIDO NOVAMENTE
+
     sprintf ( pessoa[qtdPessoa].verEnd, "%s", obterNomeEndereco ( pessoa[qtdPessoa].tpEnd ) );
     sprintf ( pessoa[qtdPessoa].verCon, "%s", obterNomeTelefone ( pessoa[qtdPessoa].tpCon ) );
     sprintf ( pessoa[qtdPessoa].verSoci, "%s", obterNomeSocial ( pessoa[qtdPessoa].tpSoci ) );
@@ -598,6 +612,10 @@ void ordenarNomes ( registro pessoa [ TAM_VET ], int qtdPessoa )
 
 void verificaEmail ( registro pessoa [ TAM_VET ], int qtdPessoa )
 {
+    //ESSA FUNÇÃO VERIFICA SE A STRING DO EMAIL DIGITADO POSSUI @ E PONTO
+    //APÓS ISSO ELA VERIFICA SE O @ ESTÁ POSICIONADO ANTAES DO PONTO
+    //CASO CONTRÁRIO ELA PEDE PARA QUE SEJA DIGITADO EMAIL NOVAMENTE
+
     char vrArr[] = "@";
     char vrPnt[] = ".";
     char buscaArr = '@';
